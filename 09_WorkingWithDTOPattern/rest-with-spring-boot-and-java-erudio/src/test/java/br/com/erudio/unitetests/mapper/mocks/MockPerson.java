@@ -1,4 +1,4 @@
-package br.com.erudio.unittests.mapper.mocks;
+package br.com.erudio.unitetests.mapper.mocks;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -13,8 +13,8 @@ public class MockPerson {
         return mockEntity(0);
     }
     
-    public PersonDTO mockVO() {
-        return mockVO(0);
+    public PersonDTO mockDTO() {
+        return mockDTO(0);
     }
     
     public List<Person> mockEntityList() {
@@ -25,10 +25,10 @@ public class MockPerson {
         return persons;
     }
 
-    public List<PersonDTO> mockVOList() {
+    public List<PersonDTO> mockDTOList() {
         List<PersonDTO> persons = new ArrayList<>();
         for (int i = 0; i < 14; i++) {
-            persons.add(mockVO(i));
+            persons.add(mockDTO(i));
         }
         return persons;
     }
@@ -43,7 +43,7 @@ public class MockPerson {
         return person;
     }
 
-    public PersonDTO mockVO(Integer number) {
+    public PersonDTO mockDTO(Integer number) {
         PersonDTO person = new PersonDTO();
         person.setAddress("Address Test" + number);
         person.setFirstName("First Name Test" + number);
