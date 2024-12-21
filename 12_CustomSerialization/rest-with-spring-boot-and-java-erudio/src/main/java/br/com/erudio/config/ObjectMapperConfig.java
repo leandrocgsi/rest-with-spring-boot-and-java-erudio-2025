@@ -10,13 +10,13 @@ import org.springframework.context.annotation.Configuration;
 public class ObjectMapperConfig {
 
     @Bean
-    public ObjectMapper objectMapper() {
+    public ObjectMapper objectMapper(){
         ObjectMapper mapper = new ObjectMapper();
+
         SimpleFilterProvider filters = new SimpleFilterProvider()
                 .addFilter("PersonFilter",
                         SimpleBeanPropertyFilter.serializeAllExcept("sensitiveData"));
-                     // SimpleBeanPropertyFilter.serializeAllExcept("sensitiveData", "address", "phoneNumber"));
-        mapper.setFilterProvider(filters);
+            mapper.setFilterProvider(filters);
         return mapper;
     }
 }
