@@ -1,7 +1,7 @@
 package br.com.erudio.controllers;
 
 import br.com.erudio.data.dto.PersonDTO;
-import br.com.erudio.services.PersonServices;
+import br.com.erudio.services.PersonServicesV2;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -14,7 +14,7 @@ import java.util.List;
 public class PersonController {
 
     @Autowired
-    private PersonServices service;
+    private PersonServicesV2 service;
     // private PersonServices service = new PersonServices();
 
     @GetMapping(produces = {
