@@ -79,13 +79,17 @@ public class PersonServices {
 
     @Transactional
     public PersonDTO disablePerson(Long id) {
-        var entity = repository.findById(id)
-            .orElseThrow(() -> new ResourceNotFoundException("No records found for this ID"));
+        logger.info("Disabling one person!");
+        repository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("No records found for this ID!"));
 
-        repository.disablePersons(id);
+        //repository.flush(); // Sincroniza o contexto de persistência com o banco
 
+        repository.disablePerson(id);
+
+        var entity = repository.findById(id).get();
         var dto = parseObject(entity, PersonDTO.class);
-        addHateoasLinks(dto);
+        dto.add(linkTo(methodOn(PersonController.class).findById(id)).withSelfRel());
         return dto;
     }
 

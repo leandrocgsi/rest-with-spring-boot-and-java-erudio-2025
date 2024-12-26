@@ -8,8 +8,11 @@ import org.springframework.data.repository.query.Param;
 
 public interface PersonRepository extends JpaRepository<Person, Long>{
 
-    @Modifying
+    // clearAutomatically = true: Isso limpa o contexto de
+    // persistência automaticamente após a execução da query, garantindo
+    // que o próximo findById não use dados em cache.
+    @Modifying(clearAutomatically = true)
     @Query("UPDATE Person p SET p.enabled = false WHERE p.id =:id")
-    void disablePersons(@Param("id") Long id);
+    void disablePerson(@Param("id") Long id);
 
 }
