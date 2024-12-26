@@ -88,9 +88,8 @@ public interface PersonControllerDocs {
     )
     PersonDTO update(@RequestBody PersonDTO person);
 
-
     @Operation(summary = "Disable a Person",
-            description = "Disable a specific person by their ID",
+            description = "Disable a specific person by your ID",
             tags = {"People"},
             responses = {
                     @ApiResponse(
