@@ -7,7 +7,9 @@ import br.com.erudio.repository.PersonRepository;
 import br.com.erudio.services.PersonServices;
 import br.com.erudio.unittests.mapper.mocks.MockPerson;
 
+import org.junit.Ignore;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInstance;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -16,6 +18,7 @@ import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.mockito.junit.jupiter.MockitoExtension;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -244,12 +247,14 @@ class PersonServicesTest {
         verifyNoMoreInteractions(repository);
     }
 
-    /**
     @Test
+    @Disabled("Reason: Still under development")
     void findAll() {
         List<Person> list = input.mockEntityList();
         when(repository.findAll()).thenReturn(list);
-        List<PersonDTO> people = service.findAll();
+
+
+        List<PersonDTO> people = new ArrayList<>();// service.findAll();
 
         assertNotNull(people);
         assertEquals(14, people.size());
@@ -388,5 +393,5 @@ class PersonServicesTest {
         assertEquals("First Name Test7", personSeven.getFirstName());
         assertEquals("Last Name Test7", personSeven.getLastName());
         assertEquals("Female", personSeven.getGender());
-    }*/
+    }
 }
