@@ -1,6 +1,8 @@
 package br.com.erudio.services;
 
 import br.com.erudio.controllers.BookController;
+import br.com.erudio.controllers.BookController;
+import br.com.erudio.data.dto.BookDTO;
 import br.com.erudio.data.dto.BookDTO;
 import br.com.erudio.exception.RequiredObjectIsNullException;
 import br.com.erudio.exception.ResourceNotFoundException;
@@ -9,6 +11,12 @@ import br.com.erudio.repository.BookRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PagedResourcesAssembler;
+import org.springframework.hateoas.EntityModel;
+import org.springframework.hateoas.Link;
+import org.springframework.hateoas.PagedModel;
+import org.springframework.hateoas.server.mvc.WebMvcLinkBuilder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -27,13 +35,29 @@ public class BookServices {
     BookRepository repository;
 
 
-    public List<BookDTO> findAll() {
+    @Autowired
+    PagedResourcesAssembler<BookDTO> assembler;
 
-        logger.info("Finding all Book!");
+    public PagedModel<EntityModel<BookDTO>> findAll(Pageable pageable) {
 
-        var books = parseListObjects(repository.findAll(), BookDTO.class);
-        books.forEach(this::addHateoasLinks);
-        return books;
+        logger.info("Finding all books!");
+
+        var booksPage = repository.findAll(pageable);
+
+        var booksWithLinks = booksPage.map(book -> {
+            var dto = parseObject(book, BookDTO.class);
+            addHateoasLinks(dto);
+            return dto;
+        });
+
+        // Adiciona o link de "self" para a coleção
+        Link findAllLink = WebMvcLinkBuilder.linkTo(
+                        WebMvcLinkBuilder.methodOn(BookController.class)
+                                .findAll(pageable.getPageNumber(), pageable.getPageSize(), "asc"))
+                .withSelfRel();
+
+        // Usa o PagedResourcesAssembler para criar o PagedModel
+        return assembler.toModel(booksWithLinks, findAllLink);
     }
 
     public BookDTO findById(Long id) {
