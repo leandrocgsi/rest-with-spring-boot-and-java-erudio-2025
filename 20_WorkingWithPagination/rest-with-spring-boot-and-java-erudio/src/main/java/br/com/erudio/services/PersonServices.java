@@ -58,6 +58,28 @@ public class PersonServices {
         return assembler.toModel(personsWithLinks, findAllLink);
     }
 
+    public PagedModel<EntityModel<PersonDTO>> findPersonByName(String firstName, Pageable pageable) {
+
+        logger.info("Finding people by name!");
+
+        var peoplePage = repository.findPersonByName(firstName, pageable);
+
+        var personsWithLinks = peoplePage.map(person -> {
+            var dto = parseObject(person, PersonDTO.class);
+            addHateoasLinks(dto);
+            return dto;
+        });
+
+        // Adiciona o link de "self" para a coleção
+        Link findAllLink = WebMvcLinkBuilder.linkTo(
+                        WebMvcLinkBuilder.methodOn(PersonController.class)
+                                .findAll(pageable.getPageNumber(), pageable.getPageSize(), "asc"))
+                .withSelfRel();
+
+        // Usa o PagedResourcesAssembler para criar o PagedModel
+        return assembler.toModel(personsWithLinks, findAllLink);
+    }
+
 
     public PersonDTO findById(Long id) {
         logger.info("Finding one Person!");
@@ -126,6 +148,7 @@ public class PersonServices {
     private void addHateoasLinks(PersonDTO dto) {
         dto.add(linkTo(methodOn(PersonController.class).findById(dto.getId())).withSelfRel().withType("GET"));
         dto.add(linkTo(methodOn(PersonController.class).findAll(0, 12, "asc")).withRel("findAll").withType("GET"));
+        dto.add(linkTo(methodOn(PersonController.class).findPersonByName("firstName", 0, 12, "asc")).withRel("findPersonByName").withType("GET"));
         dto.add(linkTo(methodOn(PersonController.class).create(dto)).withRel("create").withType("POST"));
         dto.add(linkTo(methodOn(PersonController.class).update(dto)).withRel("update").withType("PUT"));
         dto.add(linkTo(methodOn(PersonController.class).disablePerson(dto.getId())).withRel("disable").withType("PATCH"));

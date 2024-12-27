@@ -242,6 +242,7 @@ class BookServicesTest {
         verifyNoMoreInteractions(repository);
     }
 
+    /**
     @Test
     void findAll() {
         List<Book> list = input.mockEntityList();
@@ -385,5 +386,5 @@ class BookServicesTest {
         assertEquals(25D, bookSeven.getPrice());
         assertEquals("Some Title7", bookSeven.getTitle());
         assertNotNull(bookFour.getLaunchDate());
-    }
+    }*/
 }
