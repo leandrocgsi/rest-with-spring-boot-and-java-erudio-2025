@@ -1,10 +1,12 @@
 package br.com.erudio.integrationtests.dto;
 
 import jakarta.xml.bind.annotation.XmlRootElement;
+import org.springframework.hateoas.server.core.Relation;
 
 import java.io.Serializable;
 import java.util.Objects;
 
+@Relation(collectionRelation = "people")
 @XmlRootElement
 public class PersonDTO implements Serializable {
 

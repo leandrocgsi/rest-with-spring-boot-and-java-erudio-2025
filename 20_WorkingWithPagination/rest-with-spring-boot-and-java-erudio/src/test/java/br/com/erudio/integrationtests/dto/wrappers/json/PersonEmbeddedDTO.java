@@ -1,4 +1,4 @@
-package br.com.erudio.integrationtests.dto.wrappers;
+package br.com.erudio.integrationtests.dto.wrappers.json;
 
 import java.io.Serializable;
 import java.util.List;

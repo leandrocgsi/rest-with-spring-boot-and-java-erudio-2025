@@ -2,13 +2,10 @@ package br.com.erudio.integrationtests.controllers.withxml;
 
 import br.com.erudio.config.TestConfigs;
 import br.com.erudio.integrationtests.dto.PersonDTO;
-import br.com.erudio.integrationtests.dto.wrappers.WrapperPersonDTO;
 import br.com.erudio.integrationtests.dto.wrappers.xml.PagedModelPerson;
 import br.com.erudio.integrationtests.testcontainers.AbstractIntegrationTest;
 import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.DeserializationFeature;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.dataformat.xml.XmlMapper;
 import io.restassured.builder.RequestSpecBuilder;
 import io.restassured.filter.log.LogDetail;
@@ -18,8 +15,6 @@ import io.restassured.specification.RequestSpecification;
 import org.junit.jupiter.api.*;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
-
-import java.util.List;
 
 import static io.restassured.RestAssured.given;
 import static junit.framework.TestCase.assertTrue;
