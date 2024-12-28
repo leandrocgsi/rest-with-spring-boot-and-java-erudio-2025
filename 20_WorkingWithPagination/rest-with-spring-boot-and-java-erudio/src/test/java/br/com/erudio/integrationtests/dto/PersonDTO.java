@@ -1,6 +1,7 @@
 package br.com.erudio.integrationtests.dto;
 
 import jakarta.xml.bind.annotation.XmlRootElement;
+import org.springframework.hateoas.RepresentationModel;
 import org.springframework.hateoas.server.core.Relation;
 
 import java.io.Serializable;
