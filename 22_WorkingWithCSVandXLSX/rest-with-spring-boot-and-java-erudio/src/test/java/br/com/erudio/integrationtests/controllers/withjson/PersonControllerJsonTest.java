@@ -11,15 +11,18 @@ import io.restassured.builder.RequestSpecBuilder;
 import io.restassured.filter.log.LogDetail;
 import io.restassured.filter.log.RequestLoggingFilter;
 import io.restassured.filter.log.ResponseLoggingFilter;
+import io.restassured.response.Response;
 import io.restassured.specification.RequestSpecification;
 import org.junit.jupiter.api.*;
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.*;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
 
 import java.util.List;
+import java.util.Map;
 
 import static io.restassured.RestAssured.given;
-import static junit.framework.TestCase.assertTrue;
 import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.DEFINED_PORT)
@@ -197,7 +200,7 @@ class PersonControllerJsonTest extends AbstractIntegrationTest {
                 .asString();
 
         WrapperPersonDTO wrapper = objectMapper.readValue(content, WrapperPersonDTO.class);
-        List<PersonDTO> people = wrapper.getEmbedded().getPeople();
+        var people = wrapper.getEmbedded().getPeople();
 
         PersonDTO personOne = people.get(0);
 
@@ -224,6 +227,64 @@ class PersonControllerJsonTest extends AbstractIntegrationTest {
 
     @Test
     @Order(7)
+    void hateoasTest() throws JsonProcessingException {
+
+        Response response = given(specification)
+                .accept(MediaType.APPLICATION_JSON_VALUE)
+                .queryParams("page", 6 , "size", 10, "direction", "asc")
+                .when()
+                .get()
+                .then()
+                .statusCode(200)
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .extract()
+                .response();// Extrai o objeto Response para validações adicionais
+
+        // Obtém o corpo da resposta como uma string JSON
+        String json = response.getBody().asString();
+
+        // Obtém a lista de pessoas a partir do JSON no campo `_embedded.people`
+        List<Map<String, Object>> people = response.jsonPath().getList("_embedded.people");
+
+        // Itera sobre cada pessoa na lista para validar os links HATEOAS
+        for (Map<String, Object> person : people) {
+            Map<String, Object> links = (Map<String, Object>) person.get("_links"); // Obtém os links de cada pessoa
+
+            // Verifica se os links HATEOAS esperados estão presentes
+            assertThat("HATEOAS link 'self' is missing", links, hasKey("self"));
+            assertThat("HATEOAS link 'findAll' is missing", links, hasKey("findAll"));
+            assertThat("HATEOAS link 'create' is missing", links, hasKey("create"));
+            assertThat("HATEOAS link 'update' is missing", links, hasKey("update"));
+            assertThat("HATEOAS link 'disable' is missing", links, hasKey("disable"));
+            assertThat("HATEOAS link 'delete' is missing", links, hasKey("delete"));
+
+            // Valida o formato das URLs e se o método HTTP associado está presente
+            links.forEach((key, value) -> {
+                String href = ((Map<String, String>) value).get("href"); // Obtém o link associado ao HATEOAS
+                assertThat("HATEOAS link '" + key + "' has an invalid URL", href, matchesPattern("https?://.+/api/person/v1.*"));
+                assertThat("HATEOAS link '" + key + "' has an invalid HTTP method", ((Map<String, String>) value).get("type"), notNullValue());
+            });
+        }
+
+        // Valida os links relacionados à navegação da página
+        Map<String, Object> pageLinks = response.jsonPath().getMap("_links");
+        assertThat("Page link 'first' is missing", pageLinks, hasKey("first")); // Link para a primeira página
+        assertThat("Page link 'self' is missing", pageLinks, hasKey("self")); // Link para a página atual
+        assertThat("Page link 'next' is missing", pageLinks, hasKey("next")); // Link para a próxima página
+        assertThat("Page link 'last' is missing", pageLinks, hasKey("last")); // Link para a última página
+
+        // Valida os atributos relacionados à paginação no JSON
+        Map<String, Object> pageAttributes = response.jsonPath().getMap("page");
+        assertThat(pageAttributes.get("size"), is(10)); // Verifica o tamanho da página (10 itens)
+        assertThat(pageAttributes.get("number"), is(6)); // Verifica o número da página atual (6)
+
+        // Verifica se os atributos `totalElements` e `totalPages` são maiores que zero
+        assertTrue((Integer) pageAttributes.get("totalElements") > 0, "totalElements deve ser maior que 0");
+        assertTrue((Integer) pageAttributes.get("totalPages") > 0, "totalPages deve ser maior que 0");
+    }
+
+    @Test
+    @Order(8)
     void findByNameTest() throws JsonProcessingException {
 
         // {{baseUrl}}/api/person/v1/findPeopleByName/and?page=0&size=12&direction=asc

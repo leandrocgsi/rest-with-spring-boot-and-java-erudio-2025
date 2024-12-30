@@ -6,20 +6,28 @@ import br.com.erudio.integrationtests.dto.wrappers.xmlandyaml.PagedModelPerson;
 import br.com.erudio.integrationtests.testcontainers.AbstractIntegrationTest;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.DeserializationFeature;
+import com.fasterxml.jackson.databind.module.SimpleModule;
 import com.fasterxml.jackson.dataformat.xml.XmlMapper;
 import io.restassured.builder.RequestSpecBuilder;
 import io.restassured.filter.log.LogDetail;
 import io.restassured.filter.log.RequestLoggingFilter;
 import io.restassured.filter.log.ResponseLoggingFilter;
+import io.restassured.path.xml.XmlPath;
+import io.restassured.response.Response;
 import io.restassured.specification.RequestSpecification;
 import org.junit.jupiter.api.*;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.hateoas.Link;
 import org.springframework.http.MediaType;
 
 import java.util.List;
+import java.util.Map;
 
 import static io.restassured.RestAssured.given;
 import static junit.framework.TestCase.assertTrue;
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.*;
+import static org.hamcrest.Matchers.is;
 import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.DEFINED_PORT)
@@ -35,6 +43,7 @@ class PersonControllerXmlTest extends AbstractIntegrationTest {
     static void setUp() {
         objectMapper = new XmlMapper();
         objectMapper.disable(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES);
+        // objectMapper.registerModule(new SimpleModule().addDeserializer(Link.class, new LinkDeserializer()));
 
         person = new PersonDTO();
     }
@@ -200,7 +209,7 @@ class PersonControllerXmlTest extends AbstractIntegrationTest {
                 .asString();
 
         PagedModelPerson wrapper = objectMapper.readValue(content, PagedModelPerson.class);
-        List<PersonDTO> people = wrapper.getContent();
+        var people = wrapper.getContent();
 
         PersonDTO personOne = people.get(0);
 
@@ -227,6 +236,62 @@ class PersonControllerXmlTest extends AbstractIntegrationTest {
 
     @Test
     @Order(7)
+    void hateoasTest() {
+
+        Response response = given(specification)
+                .accept(MediaType.APPLICATION_XML_VALUE)
+                .queryParams("page", 6 , "size", 10, "direction", "asc")
+                .when()
+                .get()
+                .then()
+                .statusCode(200)
+                .contentType(MediaType.APPLICATION_XML_VALUE)
+                .extract()
+                .response();
+
+        // Obt�m o corpo da resposta como uma string XML
+        String xml = response.getBody().asString();
+
+        // Usa XmlPath para fazer as valida��es no XML
+        XmlPath xmlPath = new XmlPath(xml);
+
+        // Tenta obter a lista de links como uma lista de strings, n�o mapas
+        List<String> peopleLinks = xmlPath.getList("PagedModel.content.content.links.href");
+
+        // Percorre cada link e faz as valida��es
+        for (String link : peopleLinks) {
+            // Verifica se a URL est� no formato correto
+            assertThat("HATEOAS link has an invalid URL", link, matchesPattern("https?://.+/api/person/v1.*"));
+            // Certifica-se de que a URL n�o � nula
+            assertThat("HATEOAS link has a null URL", link, notNullValue());
+        }
+
+        // Valida os links de navega��o da p�gina
+        List<String> pageLinks = xmlPath.getList("PagedModel.links.href");
+
+        for (String pageLink : pageLinks) {
+            // Verifica se os links de navega��o est�o no formato correto
+            assertThat("Page link has an invalid URL", pageLink, matchesPattern("https?://.+/api/person/v1.*"));
+            assertThat("Page link has a null URL", pageLink, notNullValue());
+        }
+
+        // Valida os atributos relacionados � pagina��o no XML
+        // Corrigido: Usa get() para acessar os atributos diretamente como string
+        String size = xmlPath.getString("PagedModel.page.size");
+        String number = xmlPath.getString("PagedModel.page.number");
+        String totalElements = xmlPath.getString("PagedModel.page.totalElements");
+        String totalPages = xmlPath.getString("PagedModel.page.totalPages");
+
+        assertThat(size, is("10")); // Verifica o tamanho da p�gina (10 itens)
+        assertThat(number, is("6")); // Verifica o n�mero da p�gina atual (6)
+
+        // Verifica se os atributos 'totalElements' e 'totalPages' s�o maiores que zero
+        Assertions.assertTrue(Integer.parseInt(totalElements) > 0, "totalElements deve ser maior que 0");
+        Assertions.assertTrue(Integer.parseInt(totalPages) > 0, "totalPages deve ser maior que 0");
+    }
+    
+    @Test
+    @Order(8)
     void findByNameTestTest() throws JsonProcessingException {
 
         var content = given(specification)
