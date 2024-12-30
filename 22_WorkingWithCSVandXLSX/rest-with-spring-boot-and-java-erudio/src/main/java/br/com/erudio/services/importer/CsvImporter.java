@@ -1,6 +1,6 @@
 package br.com.erudio.services.importer;
 
-import br.com.erudio.model.Person;
+import br.com.erudio.data.dto.PersonDTO;
 
 import org.apache.commons.csv.CSVFormat;
 import org.apache.commons.csv.CSVRecord;
@@ -14,40 +14,43 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Service
-public class CSVImporter {
+public class CsvImporter {
 
-    public List<Person> readCSV(InputStream input) {
+    public List<PersonDTO> readCSV(InputStream input) {
         try {
-            // Configure the CSV parser with standard delimiter (comma)
-            Iterable<CSVRecord> records = CSVFormat.RFC4180
-                    .withFirstRecordAsHeader() // Skip the first line as a header
-                    .withIgnoreEmptyLines() // Ignore empty lines
-                    .withTrim() // Trim whitespace from entries
-                    .parse(new InputStreamReader(input));
+            // Configura o CSVFormat usando o Builder recomendado
+            CSVFormat csvFormat = CSVFormat.Builder.create()
+                    .setHeader() // Define que a primeira linha será usada como cabeçalho
+                    .setSkipHeaderRecord(true) // Ignora o registro de cabeçalho
+                    .setIgnoreEmptyLines(true) // Ignora linhas vazias
+                    .setTrim(true) // Remove espaços em branco de entradas
+                    .build();
 
-            return parseRecordsToPersons(records);
+            // Faz o parsing do arquivo de entrada
+            Iterable<CSVRecord> records = csvFormat.parse(new InputStreamReader(input));
+
+            return parseRecordsToPersonDTOs(records);
         } catch (IOException e) {
             throw new ApplicationContextException("Error processing the CSV file: " + e.getMessage(), e);
         }
     }
 
-    private List<Person> parseRecordsToPersons(Iterable<CSVRecord> records) {
-        List<Person> persons = new ArrayList<>();
+    private List<PersonDTO> parseRecordsToPersonDTOs(Iterable<CSVRecord> records) {
+        List<PersonDTO> persons = new ArrayList<>();
         for (CSVRecord record : records) {
-            persons.add(parseRecordToPerson(record));
+            persons.add(parseRecordToPersonDTO(record));
         }
         return persons;
     }
 
-    private Person parseRecordToPerson(CSVRecord record) {
+    private PersonDTO parseRecordToPersonDTO(CSVRecord record) {
         try {
-            Person person = new Person();
+            PersonDTO person = new PersonDTO();
             person.setFirstName(record.get("name")); // Replace with the actual column names in your header
             person.setLastName(record.get("email"));
             person.setAddress(record.get("phone"));
             person.setGender(record.get("cpf"));
             person.setEnabled(true);
-            // Add more fields as necessary
             return person;
         } catch (IllegalArgumentException e) {
             throw new ApplicationContextException("Error processing the record: " + record.toString(), e);
