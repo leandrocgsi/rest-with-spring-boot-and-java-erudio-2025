@@ -1,6 +1,7 @@
 package br.com.erudio.controllers.docs;
 
 import br.com.erudio.data.dto.PersonDTO;
+import br.com.erudio.data.dto.UploadFileResponseDTO;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.ArraySchema;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -12,6 +13,7 @@ import org.springframework.hateoas.PagedModel;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 
@@ -103,6 +105,22 @@ public interface PersonControllerDocs {
             }
     )
     PersonDTO create(@RequestBody PersonDTO person);
+
+    @Operation(summary = "Massive People creation",
+            description = "Massive People creation with upload of XLSX or CSV",
+            tags = {"People"},
+            responses = {
+                    @ApiResponse(
+                            description = "Success",
+                            responseCode = "200",
+                            content = @Content(schema = @Schema(implementation = PersonDTO.class))
+                    ),
+                    @ApiResponse(description = "Bad Request", responseCode = "400", content = @Content),
+                    @ApiResponse(description = "Unauthorized", responseCode = "401", content = @Content),
+                    @ApiResponse(description = "Internal Server Error", responseCode = "500", content = @Content)
+            }
+    )
+    List<PersonDTO> massCreation(MultipartFile file);
 
     @Operation(summary = "Updates a person's information",
             description = "Updates a person's information by passing in a JSON, XML or YML representation of the updated person.",

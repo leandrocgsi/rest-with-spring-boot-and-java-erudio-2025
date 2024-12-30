@@ -6,6 +6,9 @@ import br.com.erudio.exception.RequiredObjectIsNullException;
 import br.com.erudio.exception.ResourceNotFoundException;
 
 import static br.com.erudio.mapper.ObjectMapper.parseObject;
+
+import br.com.erudio.importer.contract.FileImporter;
+import br.com.erudio.importer.factory.FileImporterFactory;
 import br.com.erudio.model.Person;
 import br.com.erudio.repository.PersonRepository;
 import jakarta.transaction.Transactional;
@@ -22,6 +25,12 @@ import org.springframework.hateoas.Link;
 import org.springframework.hateoas.PagedModel;
 import org.springframework.hateoas.server.mvc.WebMvcLinkBuilder;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
+
+import java.io.InputStream;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 
 @Service
 public class PersonServices {
@@ -30,6 +39,9 @@ public class PersonServices {
 
     @Autowired
     PersonRepository repository;
+
+    @Autowired
+    private FileImporterFactory factory;
 
     @Autowired
     PagedResourcesAssembler<PersonDTO> assembler;
@@ -142,11 +154,42 @@ public class PersonServices {
         repository.delete(entity);
     }
 
+    public List<PersonDTO> massCreation(MultipartFile file) {
+        if (file.isEmpty()) return Collections.emptyList();
+
+        try (InputStream inputStream = file.getInputStream()) {
+            String fileName = file.getOriginalFilename(); // Obtenha o nome do arquivo
+            if (fileName == null) throw new IllegalArgumentException("File name cannot be null");
+
+            FileImporter importer = factory.getImporter(fileName); // Obtenha a instância correta
+            List<Person> entities = importer.importFile(inputStream).stream()
+                    .map(dto -> repository.save(parseObject(dto, Person.class)))
+                    .toList();
+
+            // Converte entidades para DTOs com links HATEOAS
+            return entities.stream()
+                    .map(entity -> {
+                        PersonDTO dto = parseObject(entity, PersonDTO.class);
+                        addHateoasLinks(dto);
+                        return dto;
+                    })
+                    .toList();
+
+        } catch (RuntimeException e) {
+            logger.error("Error while uploading.", e);
+            throw e;
+        } catch (Exception e) {
+            logger.error("Error while uploading.", e);
+            throw new RuntimeException(e);
+        }
+    }
+
     private void addHateoasLinks(PersonDTO dto) {
         dto.add(linkTo(methodOn(PersonController.class).findById(dto.getId())).withSelfRel().withType("GET"));
         dto.add(linkTo(methodOn(PersonController.class).findAll(1, 12, "asc")).withRel("findAll").withType("GET"));
         dto.add(linkTo(methodOn(PersonController.class).create(dto)).withRel("create").withType("POST"));
         dto.add(linkTo(methodOn(PersonController.class).update(dto)).withRel("update").withType("PUT"));
+        dto.add(linkTo(PersonController.class).slash("massCreation").withRel("massCreation").withType("POST"));
         dto.add(linkTo(methodOn(PersonController.class).disablePerson(dto.getId())).withRel("disable").withType("PATCH"));
         dto.add(linkTo(methodOn(PersonController.class).delete(dto.getId())).withRel("delete").withType("DELETE"));
     }
