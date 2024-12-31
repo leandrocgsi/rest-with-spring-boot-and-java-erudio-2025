@@ -2,6 +2,7 @@ package br.com.erudio.services;
 
 import br.com.erudio.controllers.PersonController;
 import br.com.erudio.data.dto.PersonDTO;
+import br.com.erudio.exception.FileStorageException;
 import br.com.erudio.exception.RequiredObjectIsNullException;
 import br.com.erudio.exception.ResourceNotFoundException;
 
@@ -34,6 +35,7 @@ import org.springframework.web.multipart.MultipartFile;
 import java.io.InputStream;
 import java.util.Collections;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class PersonServices {
@@ -134,8 +136,8 @@ public class PersonServices {
         if (file.isEmpty()) return Collections.emptyList();
 
         try (InputStream inputStream = file.getInputStream()) {
-            String fileName = file.getOriginalFilename(); // Obtenha o nome do arquivo
-            if (fileName == null) throw new IllegalArgumentException("File name cannot be null");
+            String fileName = Optional.ofNullable(file.getOriginalFilename())
+                    .orElseThrow(() -> new IllegalArgumentException("File name cannot be null"));
 
             FileImporter importer = this.importer.getImporter(fileName); // Obtenha a instância correta
             List<Person> entities = importer.importFile(inputStream).stream()
@@ -150,13 +152,9 @@ public class PersonServices {
                         return dto;
                     })
                     .toList();
-
-        } catch (RuntimeException e) {
-            logger.error("Error while uploading.", e);
-            throw e;
         } catch (Exception e) {
             logger.error("Error while uploading.", e);
-            throw new RuntimeException(e);
+            throw new FileStorageException("Error processing the file", e);
         }
     }
 

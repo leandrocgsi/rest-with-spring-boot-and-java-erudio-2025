@@ -73,12 +73,18 @@ public class PersonController implements PersonControllerDocs {
         // Determina o tipo de conteúdo baseado no Accept Header
         String contentType = acceptHeader != null ? acceptHeader : "application/octet-stream";
 
+        // Define a extensão do arquivo com base no tipo de conteúdo
+        String fileExtension = MediaTypes.APPLICATION_XLSX_VALUE.equalsIgnoreCase(acceptHeader) ? ".xlsx" : ".csv" ;
+
+        // Nome do arquivo padrão
+        String fileName = "people_exported" + fileExtension;
+
         // Configura a resposta HTTP com o arquivo como anexo
         return ResponseEntity.ok()
                 .contentType(MediaType.parseMediaType(contentType))
                 .header(
                         HttpHeaders.CONTENT_DISPOSITION,
-                        "attachment; filename=\"" + file.getFilename() + "\"")
+                        "attachment; filename=\"" + fileName + "\"")
                 .body(file);
     }
 

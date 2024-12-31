@@ -17,11 +17,23 @@
 						"header": [
 							{
 								"key": "Accept",
-								"value": "application/json"
+								"value": "application/json",
+								"disabled": true
+							},
+							{
+								"key": "Accept",
+								"value": "application/yaml",
+								"type": "text",
+								"disabled": true
+							},
+							{
+								"key": "Accept",
+								"value": "application/xml",
+								"type": "text"
 							}
 						],
 						"url": {
-							"raw": "{{baseUrl}}/api/person/v1",
+							"raw": "{{baseUrl}}/api/person/v1?page=3&size=12&direction=asc",
 							"host": [
 								"{{baseUrl}}"
 							],
@@ -29,6 +41,20 @@
 								"api",
 								"person",
 								"v1"
+							],
+							"query": [
+								{
+									"key": "page",
+									"value": "3"
+								},
+								{
+									"key": "size",
+									"value": "12"
+								},
+								{
+									"key": "direction",
+									"value": "asc"
+								}
 							]
 						},
 						"description": "Finds All People"
@@ -187,6 +213,334 @@
 							"header": [],
 							"cookie": [],
 							"body": ""
+						}
+					]
+				},
+				{
+					"name": "Export a Page of People in XLSX or CSV format",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"disabled": true
+							},
+							{
+								"key": "Accept",
+								"value": "application/yaml",
+								"type": "text",
+								"disabled": true
+							},
+							{
+								"key": "Accept",
+								"value": "application/xml",
+								"type": "text",
+								"disabled": true
+							},
+							{
+								"key": "Accept",
+								"value": "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+								"type": "text"
+							},
+							{
+								"key": "Accept",
+								"value": "text/csv",
+								"type": "text",
+								"disabled": true
+							}
+						],
+						"url": {
+							"raw": "{{baseUrl}}/api/person/v1/exportPage?page=3&size=12&direction=asc",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"person",
+								"v1",
+								"exportPage"
+							],
+							"query": [
+								{
+									"key": "page",
+									"value": "3"
+								},
+								{
+									"key": "size",
+									"value": "12"
+								},
+								{
+									"key": "direction",
+									"value": "asc"
+								}
+							]
+						},
+						"description": "Finds All People"
+					},
+					"response": [
+						{
+							"name": "Success",
+							"originalRequest": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Accept",
+										"value": "application/json"
+									}
+								],
+								"url": {
+									"raw": "{{baseUrl}}/api/person/v1",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"api",
+										"person",
+										"v1"
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								}
+							],
+							"cookie": [],
+							"body": "[\n  {\n    \"id\": \"<long>\",\n    \"firstName\": \"<string>\",\n    \"lastName\": \"<string>\",\n    \"address\": \"<string>\",\n    \"gender\": \"<string>\",\n    \"_links\": {\n      \"Ut_8f\": {\n        \"href\": \"<string>\",\n        \"hreflang\": \"<string>\",\n        \"title\": \"<string>\",\n        \"type\": \"<string>\",\n        \"deprecation\": \"<string>\",\n        \"profile\": \"<string>\",\n        \"name\": \"<string>\",\n        \"templated\": \"<boolean>\"\n      },\n      \"ea_d0e\": {\n        \"href\": \"<string>\",\n        \"hreflang\": \"<string>\",\n        \"title\": \"<string>\",\n        \"type\": \"<string>\",\n        \"deprecation\": \"<string>\",\n        \"profile\": \"<string>\",\n        \"name\": \"<string>\",\n        \"templated\": \"<boolean>\"\n      }\n    }\n  },\n  {\n    \"id\": \"<long>\",\n    \"firstName\": \"<string>\",\n    \"lastName\": \"<string>\",\n    \"address\": \"<string>\",\n    \"gender\": \"<string>\",\n    \"_links\": {\n      \"in_8\": {\n        \"href\": \"<string>\",\n        \"hreflang\": \"<string>\",\n        \"title\": \"<string>\",\n        \"type\": \"<string>\",\n        \"deprecation\": \"<string>\",\n        \"profile\": \"<string>\",\n        \"name\": \"<string>\",\n        \"templated\": \"<boolean>\"\n      },\n      \"sunt_99\": {\n        \"href\": \"<string>\",\n        \"hreflang\": \"<string>\",\n        \"title\": \"<string>\",\n        \"type\": \"<string>\",\n        \"deprecation\": \"<string>\",\n        \"profile\": \"<string>\",\n        \"name\": \"<string>\",\n        \"templated\": \"<boolean>\"\n      }\n    }\n  }\n]"
+						},
+						{
+							"name": "No Content",
+							"originalRequest": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{baseUrl}}/api/person/v1",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"api",
+										"person",
+										"v1"
+									]
+								}
+							},
+							"status": "No Content",
+							"code": 204,
+							"_postman_previewlanguage": "text",
+							"header": [],
+							"cookie": [],
+							"body": ""
+						},
+						{
+							"name": "Bad Request",
+							"originalRequest": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{baseUrl}}/api/person/v1",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"api",
+										"person",
+										"v1"
+									]
+								}
+							},
+							"status": "Bad Request",
+							"code": 400,
+							"_postman_previewlanguage": "text",
+							"header": [],
+							"cookie": [],
+							"body": ""
+						},
+						{
+							"name": "Unauthorized",
+							"originalRequest": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{baseUrl}}/api/person/v1",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"api",
+										"person",
+										"v1"
+									]
+								}
+							},
+							"status": "Unauthorized",
+							"code": 401,
+							"_postman_previewlanguage": "text",
+							"header": [],
+							"cookie": [],
+							"body": ""
+						},
+						{
+							"name": "Not Found",
+							"originalRequest": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{baseUrl}}/api/person/v1",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"api",
+										"person",
+										"v1"
+									]
+								}
+							},
+							"status": "Not Found",
+							"code": 404,
+							"_postman_previewlanguage": "text",
+							"header": [],
+							"cookie": [],
+							"body": ""
+						},
+						{
+							"name": "Internal Server Error",
+							"originalRequest": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{baseUrl}}/api/person/v1",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"api",
+										"person",
+										"v1"
+									]
+								}
+							},
+							"status": "Internal Server Error",
+							"code": 500,
+							"_postman_previewlanguage": "text",
+							"header": [],
+							"cookie": [],
+							"body": ""
+						},
+						{
+							"name": "Export a Page of People in XLSX or CSV format",
+							"originalRequest": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Accept",
+										"value": "application/json",
+										"disabled": true
+									},
+									{
+										"key": "Accept",
+										"value": "application/yaml",
+										"type": "text",
+										"disabled": true
+									},
+									{
+										"key": "Accept",
+										"value": "application/xml",
+										"type": "text",
+										"disabled": true
+									},
+									{
+										"key": "Accept",
+										"value": "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+										"type": "text"
+									},
+									{
+										"key": "Accept",
+										"value": "text/csv",
+										"type": "text",
+										"disabled": true
+									}
+								],
+								"url": {
+									"raw": "{{baseUrl}}/api/person/v1/exportPage?page=3&size=12&direction=asc",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"api",
+										"person",
+										"v1",
+										"exportPage"
+									],
+									"query": [
+										{
+											"key": "page",
+											"value": "3"
+										},
+										{
+											"key": "size",
+											"value": "12"
+										},
+										{
+											"key": "direction",
+											"value": "asc"
+										}
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "xml",
+							"header": [
+								{
+									"key": "Vary",
+									"value": "Origin"
+								},
+								{
+									"key": "Vary",
+									"value": "Access-Control-Request-Method"
+								},
+								{
+									"key": "Vary",
+									"value": "Access-Control-Request-Headers"
+								},
+								{
+									"key": "Content-Disposition",
+									"value": "attachment; filename=\"null\""
+								},
+								{
+									"key": "Accept-Ranges",
+									"value": "bytes"
+								},
+								{
+									"key": "Content-Type",
+									"value": "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
+								},
+								{
+									"key": "Content-Length",
+									"value": "4295"
+								},
+								{
+									"key": "Date",
+									"value": "Tue, 31 Dec 2024 03:11:35 GMT"
+								},
+								{
+									"key": "Keep-Alive",
+									"value": "timeout=60"
+								},
+								{
+									"key": "Connection",
+									"value": "keep-alive"
+								}
+							],
+							"cookie": [],
+							"body": "PK\u0003\u0004\u0014\u0000\b\b\b\u0000q\u0001�Y\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0013\u0000\u0000\u0000[Content_Types].xml�S�n�0\u0010����*6�PU\u0015�C\u001f�\u0016��\u0003\\{�X�%����]\u00078�R�\nq�cfgfW�d�q�ZCB\u0013|��|�*�*h㻆},^�{Va�^K\u001b\n<4l\u000b�f��b\u001b\u0001+��ذ>�� \u0004�\u001e�D\u001e\"xBڐ��tL��R-e\u0007�v4�\u0013*�\f>׹h���\tZ���z��\u0017��\u0018�Q2S,���H��\u000b�\u0004v�`o\"�\u0010�U�\u001bRٵC(2q��qa9S�\u001b\r&\u0019\r��\u0016��(�A�\u001c�p(�\u001at\u001d\u0013\u0011S6��9�)�JG���sBQ�4���0\u0016\u0015\u0012�eX�\u00179\u001eu�1���\u0003dg9�2�~ω^��\u0010\u001b+~\u0010��#o�)�\u0000\u0003r�\t�ʝ4���WH��\u0010���/\u000e��/�\u0001D1,�C\u000e1|��7PK\u0007\b�,(�;\u0001\u0000\u0000\u001d\u0004\u0000\u0000PK\u0003\u0004\u0014\u0000\b\b\b\u0000q\u0001�Y\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u000b\u0000\u0000\u0000_rels/.rels���J\u00031\u0010�_%̽�m\u0005\u0011iڋ\b���\u0007\u0018��ݰ�LHFݾ����lA��03��1�v?�I�S.���uӂ�h���\u001bx9>��@\u0015��p�H\u0006NT`��>ӄRW��SQ�\u0011��A$�k]�@\u0001KÉb�t�\u0003J-s�\u0013�\u0011{қ����'\u0003Ι��\f�[�:b�I\f̓��<�2�M���)�oB�뼥\u0007�o��,d_L�^v�|�8�O��&���24\u000bEGn�j\u0002e���W�n\u0016�,g����Gс\u0004\u001d\n~Q/���\u001f�}\u0002PK\u0007\bn2\bK�\u0000\u0000\u0000J\u0002\u0000\u0000PK\u0003\u0004\u0014\u0000\b\b\b\u0000q\u0001�Y\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0010\u0000\u0000\u0000docProps/app.xmlM��\n�0\u0010D��\u0010ro�z\u0010�4� �'{�\u000f\b��\u0006�MHV�盓z�\u0019��T��E�1e\u0017�����\u0002Ɇ�ѳ����:�No7jH!bb�Y�\u0007�V���\u0004�����T�)$o���0M��9ؗGb�7�\u0001pe�\u0011�*~�R�>��Y�EB��\u0014�\u0018nW\u0005������\u0000PK\u0007\b6n�!�\u0000\u0000\u0000�\u0000\u0000\u0000PK\u0003\u0004\u0014\u0000\b\b\b\u0000q\u0001�Y\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0011\u0000\u0000\u0000docProps/core.xmlm��J�0\u0010F_�依�]DB�E�\u0005Aq���]Hƶ���D����u��z��;s�|�����\u0013�\u001f��\t�r��\u0016F\u000e���S�K/I�\u0003ג�FcM��ɶ��e�8�;cх\u0001}\u0012=�3ak҇`\u0019�\u0017=*�H�\u0018�\u0019�x�Wׁ��w\bE�_���%\u000f\u001cfajW#9)�X��Í�@\n�\u0011\u0015���f\u0014~ـN�\u0007�d%\u000f~X�i���\\��\u0011�����e�t���\u0005��:��p�\u0003�$\nX8�X�O�\\^ߴ;�\u0014y�Ii����KF)+7�\u0015�����g㚫XH����v���\n�jn�\u0000PK\u0007\bW���\u0006\u0001\u0000\u0000�\u0001\u0000\u0000PK\u0003\u0004\u0014\u0000\b\b\b\u0000q\u0001�Y\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0014\u0000\u0000\u0000xl/sharedStrings.xmluT�n�@\u0010�W�?�|o\f\u0004\u001c\\�#\u0017�4\u0011��I\u001b�8�\u0003^e���C��\u000e�P�C��v��͛7;���hx'�5�hx5��Li+e����K�i\u001a�f\u001f?̼\u000fP�΄y�$\u0011tF��hq\u0006Ɠ\b���yT��~�c_�Ԡ��-\u0019��Y�`��Ǿu����B���`��\r*\u0013e3��Y�\u001e��8d��t:#�r��\u00136ԿY�.�r�}\u001f�'S��w\u0006��*���2��il�7��\u001aV�T[r�\u001a^�دX�\u0016\u001a�l\u001f�\u0016����p�N�\t<����ߔ\u0004\u000b2A6�B��u\u001f\u001b\u000eSXR��a��\n�x��\u0001Jѹn�)�Ë�5}�z\f_:�����*#\\˵5^x��8:�|\u001fg���v�{�&��d�\u000b���\u0012�]U)�!\f�t\u0002K<\u00066�2�/\u0012)�5`��Zi�b\u0000�4\u001d����:Uְ�X^\u0010~�Y+�-�jt¹�\u0010\n��\u000e�c�Z�\b\\ޠ�\u000b\u001f�\u0003�t���\u001d�Tt�\u0017�JK.ε\u0016O\u0014X�\u000b\u0002���\u0004��۲ݗV��x�b3�9%\u001a\u001d��sY[�a�r��LJt����S�&24JxO��t\r�\u000f\n    <v�<��_U̟\\�\u0017PK\u0007\b\u001d�\u0010��\u0001\u0000\u0000\u0012\u0005\u0000\u0000PK\u0003\u0004\u0014\u0000\b\b\b\u0000q\u0001�Y\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\r\u0000\u0000\u0000xl/styles.xml�MK�0\u0010���!��]?��\"g\u0015�f�i\u001bLfJ���_oҴ�*� \"{��̼�y�fhz�iŞ�XI����3��J�u�\u001f�\u0007��2��K��\u0015�5\u0000��\u000e�\u0019o�k/��\u0016\rha\u000f�\u0005�o*2Z8��:��\u0001Q�ФU���N\u0013-$�<ŵ^jgYAkt\u0019��$O+�7�G!O�\u000b{\u0016�[\u000b�|YA�\f�XB\u0007e�σ�BC��\u0016J��\u001cxBK�Gy\u0011���X�%�\tb\u0012w��O9\u001f\r�b��\u001a�\u0001�\u000b\u0018\u0016�AR��UX�(�i+�\u0003�K��1��[�8\u0012�����R��\u001b#���a�\u001b�Ȕ~\u0016���|��TA�|��u\u0013VGm8\u00069G�\u0007�\u00145�P\u00019u���\u0016��]\u0018���\u001d��X���2\f\u0001\u000bǟBoh\f#&&��M��-�ُ���6�����w3Ѷ�_R02|�(\\)Y�����bRXCF���p\u001b\n/@�ʮ���bW�\u001c튑�]1r�+FN��H2Ρ��~��+PK\u0007\b��=J�\u0001\u0000\u0000_\u0007\u0000\u0000PK\u0003\u0004\u0014\u0000\b\b\b\u0000q\u0001�Y\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u000f\u0000\u0000\u0000xl/workbook.xml��=O�0\u0014Ew$�����\u000eE\b�8]\u0010R�\u000e�ݵ_\u001a����i��8�\u0002�L��=��v�/��\u00053�\u0018$4k\u0001\f��Ɔ������\u0019���]w��|���*\u001fH�XJj9'=�W��\tCm���*5�\u0013��Q\u0019\u001a\u0011�w�A�'�\rp3��?�8\fV�kԟ\u001eC�I2:U�Z\u001am\"���33�`�\"\u001e%\f�\u0011\u0002ﻩ��x�_p�L�b/xPG\tb��\u001fp޼�,(�\u0012�\u0018�C`��FBޙ\r�����̆�/\u001f��PK\u0007\b�j���\u0000\u0000\u0000^\u0001\u0000\u0000PK\u0003\u0004\u0014\u0000\b\b\b\u0000q\u0001�Y\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u001a\u0000\u0000\u0000xl/_rels/workbook.xml.rels��Mk�0\f@���}q��\u0018�n/c�k?~���84����˿����@\u0007;�$��{\u000f�\\��:Q�>\u0006\u0003MU��`��Cg��xz\u0005ł��\u0010\u0003\u0019��a�Zni@)_���Ua\u00046�Eқ�l=��UL\u0014ʦ�yD)�����\u001d�E]��|ˀ9Sm���q\r�=��\u0000{��v�K\u001aW\u0005\\VS��hc���ޣ�\u001c)�\u001d���AߏY���4��+����瘏��Z^F��\u001f�5FϮ��\u0000PK\u0007\bg뢨�\u0000\u0000\u00004\u0002\u0000\u0000PK\u0003\u0004\u0014\u0000\b\b\b\u0000q\u0001�Y\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0018\u0000\u0000\u0000xl/worksheets/sheet1.xml��[o�@\u0010F�+�?X~/�^|��(����R�볁\u0005�`\u001bٛП��b-ff�4}I093��|\"�����轨�-�j�I�{���ۢ����?V\u001fR�~����\\7O�A)홂���\u0007�OwA�n\u000e���I}R��ˮn�\\��f\u001f��F�[[T\u001e\u0003\u001e�qP�E�ϧۢTUwG�Q�����VL��|j�_�:���^w�u]?u\u0017��3ߜQ����6Z�k�<��:@�+{����U�������O��\u001f�Q���)������ʢ�\u0004|������b�\u000f3_L2��i\u0012����u��򾽫�V�^\u0015�z\b׉����MR�2��F�o$\u0006��H�Ǒd�I�N\\L�P��LQ�)r��I�X��~��o\u0015\u000fZE\"\u000b�=Tp\u0019�\u001d�2��|��g��fhnӽx0�4\u0005�ﵗw_��4x�J{����`��bH\bK�[b9$�%�-�8$\"K�[b5$bKD�\b����N�ےʖ��$ɲ\t\u0014��\u0017*\u0006��H� &R ��\f\bb����p�\u0002\u0019�!C�!&\u0018��@��\u001f1\u0002\u001d�&#��9J�\u0018�)r��3�؂@@Ȗ\u0004\u0012\u0001I\u0002\u0001��@F,#g\u0019\u0011�8�\u0011�\f�� \u0010��%��A=\u0012\b�$�\u0011��Y�8�\f�5F�9@\u0016\u0004\u0002\u0003K 0�\u0018���Ęd�$\u0013$)$G�\t>\u001e\f,���\u0012\b\f,F�$�$�%S'��I�\bI��3�+���\u0012\b�+FP^\tdd���̐��H2C�\u0005�+���\u0012\b�+F�$11����\u000e\u0010���\u0018i���\tab)\u0006F�b`f\t\u0006͓`�b�\u0006\u000b\u000fC���_A��C��\u0014\u0003\u0017\u0003���\u0001�`Y�\u0019��u\u0001bx\u0003�d�e��!2(�\u0019\u0019BY�aP��E�@F\u0007{]�\u0018ޅ��\u0018,^A$��\u0004#�+�H���BD �5\u0018,�|���;�Zo]k�\b`�&ݣŮ��j�+��`�/��Q���|��<��׺>��ݣ�{���\u0005PK\u0007\b\u0003z��2\u0003\u0000\u0000�\u000e\u0000\u0000PK\u0001\u0002\u0014\u0000\u0014\u0000\b\b\b\u0000q\u0001�Y�,(�;\u0001\u0000\u0000\u001d\u0004\u0000\u0000\u0013\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000[Content_Types].xmlPK\u0001\u0002\u0014\u0000\u0014\u0000\b\b\b\u0000q\u0001�Yn2\bK�\u0000\u0000\u0000J\u0002\u0000\u0000\u000b\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000|\u0001\u0000\u0000_rels/.relsPK\u0001\u0002\u0014\u0000\u0014\u0000\b\b\b\u0000q\u0001�Y6n�!�\u0000\u0000\u0000�\u0000\u0000\u0000\u0010\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000�\u0002\u0000\u0000docProps/app.xmlPK\u0001\u0002\u0014\u0000\u0014\u0000\b\b\b\u0000q\u0001�YW���\u0006\u0001\u0000\u0000�\u0001\u0000\u0000\u0011\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000k\u0003\u0000\u0000docProps/core.xmlPK\u0001\u0002\u0014\u0000\u0014\u0000\b\b\b\u0000q\u0001�Y\u001d�\u0010��\u0001\u0000\u0000\u0012\u0005\u0000\u0000\u0014\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000�\u0004\u0000\u0000xl/sharedStrings.xmlPK\u0001\u0002\u0014\u0000\u0014\u0000\b\b\b\u0000q\u0001�Y��=J�\u0001\u0000\u0000_\u0007\u0000\u0000\r\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000�\u0006\u0000\u0000xl/styles.xmlPK\u0001\u0002\u0014\u0000\u0014\u0000\b\b\b\u0000q\u0001�Y�j���\u0000\u0000\u0000^\u0001\u0000\u0000\u000f\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000�\b\u0000\u0000xl/workbook.xmlPK\u0001\u0002\u0014\u0000\u0014\u0000\b\b\b\u0000q\u0001�Yg뢨�\u0000\u0000\u00004\u0002\u0000\u0000\u001a\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000�\t\u0000\u0000xl/_rels/workbook.xml.relsPK\u0001\u0002\u0014\u0000\u0014\u0000\b\b\b\u0000q\u0001�Y\u0003z��2\u0003\u0000\u0000�\u000e\u0000\u0000\u0018\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000�\n\u0000\u0000xl/worksheets/sheet1.xmlPK\u0005\u0006\u0000\u0000\u0000\u0000\t\u0000\t\u0000?\u0002\u0000\u0000r\u000e\u0000\u0000\u0000\u0000"
 						}
 					]
 				},
@@ -1284,6 +1638,220 @@
 								"api",
 								"person",
 								"v1"
+							]
+						},
+						"description": "Adds a new person by passing in a JSON, XML or YML representation of the person."
+					},
+					"response": [
+						{
+							"name": "Success",
+							"originalRequest": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									},
+									{
+										"key": "Accept",
+										"value": "application/json"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n  \"id\": \"<long>\",\n  \"firstName\": \"<string>\",\n  \"lastName\": \"<string>\",\n  \"address\": \"<string>\",\n  \"gender\": \"<string>\",\n  \"_links\": {\n    \"laborum_8_3\": {\n      \"href\": \"<string>\",\n      \"hreflang\": \"<string>\",\n      \"title\": \"<string>\",\n      \"type\": \"<string>\",\n      \"deprecation\": \"<string>\",\n      \"profile\": \"<string>\",\n      \"name\": \"<string>\",\n      \"templated\": \"<boolean>\"\n    },\n    \"veniam1\": {\n      \"href\": \"<string>\",\n      \"hreflang\": \"<string>\",\n      \"title\": \"<string>\",\n      \"type\": \"<string>\",\n      \"deprecation\": \"<string>\",\n      \"profile\": \"<string>\",\n      \"name\": \"<string>\",\n      \"templated\": \"<boolean>\"\n    },\n    \"Ut82\": {\n      \"href\": \"<string>\",\n      \"hreflang\": \"<string>\",\n      \"title\": \"<string>\",\n      \"type\": \"<string>\",\n      \"deprecation\": \"<string>\",\n      \"profile\": \"<string>\",\n      \"name\": \"<string>\",\n      \"templated\": \"<boolean>\"\n    }\n  }\n}",
+									"options": {
+										"raw": {
+											"headerFamily": "json",
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{baseUrl}}/api/person/v1",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"api",
+										"person",
+										"v1"
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								}
+							],
+							"cookie": [],
+							"body": "{\n  \"id\": \"<long>\",\n  \"firstName\": \"<string>\",\n  \"lastName\": \"<string>\",\n  \"address\": \"<string>\",\n  \"gender\": \"<string>\",\n  \"_links\": {\n    \"laborum_8_3\": {\n      \"href\": \"<string>\",\n      \"hreflang\": \"<string>\",\n      \"title\": \"<string>\",\n      \"type\": \"<string>\",\n      \"deprecation\": \"<string>\",\n      \"profile\": \"<string>\",\n      \"name\": \"<string>\",\n      \"templated\": \"<boolean>\"\n    },\n    \"veniam1\": {\n      \"href\": \"<string>\",\n      \"hreflang\": \"<string>\",\n      \"title\": \"<string>\",\n      \"type\": \"<string>\",\n      \"deprecation\": \"<string>\",\n      \"profile\": \"<string>\",\n      \"name\": \"<string>\",\n      \"templated\": \"<boolean>\"\n    },\n    \"Ut82\": {\n      \"href\": \"<string>\",\n      \"hreflang\": \"<string>\",\n      \"title\": \"<string>\",\n      \"type\": \"<string>\",\n      \"deprecation\": \"<string>\",\n      \"profile\": \"<string>\",\n      \"name\": \"<string>\",\n      \"templated\": \"<boolean>\"\n    }\n  }\n}"
+						},
+						{
+							"name": "Bad Request",
+							"originalRequest": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n  \"id\": \"<long>\",\n  \"firstName\": \"<string>\",\n  \"lastName\": \"<string>\",\n  \"address\": \"<string>\",\n  \"gender\": \"<string>\",\n  \"_links\": {\n    \"laborum_8_3\": {\n      \"href\": \"<string>\",\n      \"hreflang\": \"<string>\",\n      \"title\": \"<string>\",\n      \"type\": \"<string>\",\n      \"deprecation\": \"<string>\",\n      \"profile\": \"<string>\",\n      \"name\": \"<string>\",\n      \"templated\": \"<boolean>\"\n    },\n    \"veniam1\": {\n      \"href\": \"<string>\",\n      \"hreflang\": \"<string>\",\n      \"title\": \"<string>\",\n      \"type\": \"<string>\",\n      \"deprecation\": \"<string>\",\n      \"profile\": \"<string>\",\n      \"name\": \"<string>\",\n      \"templated\": \"<boolean>\"\n    },\n    \"Ut82\": {\n      \"href\": \"<string>\",\n      \"hreflang\": \"<string>\",\n      \"title\": \"<string>\",\n      \"type\": \"<string>\",\n      \"deprecation\": \"<string>\",\n      \"profile\": \"<string>\",\n      \"name\": \"<string>\",\n      \"templated\": \"<boolean>\"\n    }\n  }\n}",
+									"options": {
+										"raw": {
+											"headerFamily": "json",
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{baseUrl}}/api/person/v1",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"api",
+										"person",
+										"v1"
+									]
+								}
+							},
+							"status": "Bad Request",
+							"code": 400,
+							"_postman_previewlanguage": "text",
+							"header": [],
+							"cookie": [],
+							"body": ""
+						},
+						{
+							"name": "Unauthorized",
+							"originalRequest": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n  \"id\": \"<long>\",\n  \"firstName\": \"<string>\",\n  \"lastName\": \"<string>\",\n  \"address\": \"<string>\",\n  \"gender\": \"<string>\",\n  \"_links\": {\n    \"laborum_8_3\": {\n      \"href\": \"<string>\",\n      \"hreflang\": \"<string>\",\n      \"title\": \"<string>\",\n      \"type\": \"<string>\",\n      \"deprecation\": \"<string>\",\n      \"profile\": \"<string>\",\n      \"name\": \"<string>\",\n      \"templated\": \"<boolean>\"\n    },\n    \"veniam1\": {\n      \"href\": \"<string>\",\n      \"hreflang\": \"<string>\",\n      \"title\": \"<string>\",\n      \"type\": \"<string>\",\n      \"deprecation\": \"<string>\",\n      \"profile\": \"<string>\",\n      \"name\": \"<string>\",\n      \"templated\": \"<boolean>\"\n    },\n    \"Ut82\": {\n      \"href\": \"<string>\",\n      \"hreflang\": \"<string>\",\n      \"title\": \"<string>\",\n      \"type\": \"<string>\",\n      \"deprecation\": \"<string>\",\n      \"profile\": \"<string>\",\n      \"name\": \"<string>\",\n      \"templated\": \"<boolean>\"\n    }\n  }\n}",
+									"options": {
+										"raw": {
+											"headerFamily": "json",
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{baseUrl}}/api/person/v1",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"api",
+										"person",
+										"v1"
+									]
+								}
+							},
+							"status": "Unauthorized",
+							"code": 401,
+							"_postman_previewlanguage": "text",
+							"header": [],
+							"cookie": [],
+							"body": ""
+						},
+						{
+							"name": "Internal Server Error",
+							"originalRequest": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n  \"id\": \"<long>\",\n  \"firstName\": \"<string>\",\n  \"lastName\": \"<string>\",\n  \"address\": \"<string>\",\n  \"gender\": \"<string>\",\n  \"_links\": {\n    \"laborum_8_3\": {\n      \"href\": \"<string>\",\n      \"hreflang\": \"<string>\",\n      \"title\": \"<string>\",\n      \"type\": \"<string>\",\n      \"deprecation\": \"<string>\",\n      \"profile\": \"<string>\",\n      \"name\": \"<string>\",\n      \"templated\": \"<boolean>\"\n    },\n    \"veniam1\": {\n      \"href\": \"<string>\",\n      \"hreflang\": \"<string>\",\n      \"title\": \"<string>\",\n      \"type\": \"<string>\",\n      \"deprecation\": \"<string>\",\n      \"profile\": \"<string>\",\n      \"name\": \"<string>\",\n      \"templated\": \"<boolean>\"\n    },\n    \"Ut82\": {\n      \"href\": \"<string>\",\n      \"hreflang\": \"<string>\",\n      \"title\": \"<string>\",\n      \"type\": \"<string>\",\n      \"deprecation\": \"<string>\",\n      \"profile\": \"<string>\",\n      \"name\": \"<string>\",\n      \"templated\": \"<boolean>\"\n    }\n  }\n}",
+									"options": {
+										"raw": {
+											"headerFamily": "json",
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{baseUrl}}/api/person/v1",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"api",
+										"person",
+										"v1"
+									]
+								}
+							},
+							"status": "Internal Server Error",
+							"code": 500,
+							"_postman_previewlanguage": "text",
+							"header": [],
+							"cookie": [],
+							"body": ""
+						}
+					]
+				},
+				{
+					"name": "Massive People creation",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"disabled": true
+							},
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"disabled": true
+							},
+							{
+								"key": "file",
+								"value": "",
+								"type": "text",
+								"disabled": true
+							}
+						],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "file",
+									"type": "file",
+									"src": "/D:/TestarUpload/MOCK_DATA.csv"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{baseUrl}}/api/person/v1/massCreation",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"person",
+								"v1",
+								"massCreation"
 							]
 						},
 						"description": "Adds a new person by passing in a JSON, XML or YML representation of the person."
