@@ -2,6 +2,7 @@ package br.com.erudio.controllers.docs;
 
 import br.com.erudio.data.dto.PersonDTO;
 import br.com.erudio.data.dto.UploadFileResponseDTO;
+import br.com.erudio.file.MediaTypes;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.ArraySchema;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -55,8 +56,8 @@ public interface PersonControllerDocs {
                             description = "Success",
                             responseCode = "200",
                             content = {
-                                    @Content(mediaType = "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"),
-                                    @Content(mediaType = "text/csv")
+                                    @Content(mediaType = MediaTypes.APPLICATION_XLSX_VALUE),
+                                    @Content(mediaType = MediaTypes.APPLICATION_CSV_VALUE)
                             }
                     ),
                     @ApiResponse(description = "No Content", responseCode = "204", content = @Content),

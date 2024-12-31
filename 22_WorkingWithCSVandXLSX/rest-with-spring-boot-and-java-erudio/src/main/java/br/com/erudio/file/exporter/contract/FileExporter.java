@@ -1,4 +1,4 @@
-package br.com.erudio.exporter.contract;
+package br.com.erudio.file.exporter.contract;
 
 import br.com.erudio.data.dto.PersonDTO;
 import org.springframework.core.io.Resource;

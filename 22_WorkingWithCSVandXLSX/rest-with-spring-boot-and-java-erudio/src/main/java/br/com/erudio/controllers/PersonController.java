@@ -2,6 +2,7 @@ package br.com.erudio.controllers;
 
 import br.com.erudio.controllers.docs.PersonControllerDocs;
 import br.com.erudio.data.dto.PersonDTO;
+import br.com.erudio.file.MediaTypes;
 import br.com.erudio.services.PersonServices;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.servlet.http.HttpServletRequest;
@@ -51,8 +52,8 @@ public class PersonController implements PersonControllerDocs {
     }
 
     @GetMapping(value = "/exportPage", produces = {
-            "text/csv",
-            "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"})
+            MediaTypes.APPLICATION_CSV_VALUE,
+            MediaTypes.APPLICATION_XLSX_VALUE})
     @Override
     public ResponseEntity<Resource> exportPage(
             @RequestParam(value = "page", defaultValue = "0") Integer page,

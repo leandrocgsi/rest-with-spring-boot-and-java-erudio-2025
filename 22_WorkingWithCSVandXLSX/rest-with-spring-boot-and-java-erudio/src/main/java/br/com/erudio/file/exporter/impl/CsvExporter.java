@@ -1,7 +1,7 @@
-package br.com.erudio.exporter.impl;
+package br.com.erudio.file.exporter.impl;
 
 import br.com.erudio.data.dto.PersonDTO;
-import br.com.erudio.exporter.contract.FileExporter;
+import br.com.erudio.file.exporter.contract.FileExporter;
 import org.apache.commons.csv.CSVFormat;
 import org.apache.commons.csv.CSVPrinter;
 import org.springframework.core.io.ByteArrayResource;

@@ -1,4 +1,4 @@
-package br.com.erudio.importer.contract;
+package br.com.erudio.file.importer.contract;
 
 import br.com.erudio.data.dto.PersonDTO;
 

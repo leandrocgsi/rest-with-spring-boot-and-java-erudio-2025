@@ -1,7 +1,7 @@
-package br.com.erudio.importer.impl;
+package br.com.erudio.file.importer.impl;
 
 import br.com.erudio.data.dto.PersonDTO;
-import br.com.erudio.importer.contract.FileImporter;
+import br.com.erudio.file.importer.contract.FileImporter;
 import org.apache.commons.csv.CSVFormat;
 import org.apache.commons.csv.CSVRecord;
 import org.springframework.stereotype.Component;

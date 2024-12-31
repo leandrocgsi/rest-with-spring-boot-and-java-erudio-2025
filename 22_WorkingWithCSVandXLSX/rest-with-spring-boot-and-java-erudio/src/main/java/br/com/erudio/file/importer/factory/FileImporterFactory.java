@@ -1,9 +1,8 @@
-package br.com.erudio.importer.factory;
+package br.com.erudio.file.importer.factory;
 
-import br.com.erudio.importer.impl.CsvImporter;
-import br.com.erudio.importer.contract.FileImporter;
-import br.com.erudio.importer.impl.XlsxImporter;
-import br.com.erudio.services.PersonServices;
+import br.com.erudio.file.importer.impl.CsvImporter;
+import br.com.erudio.file.importer.contract.FileImporter;
+import br.com.erudio.file.importer.impl.XlsxImporter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
