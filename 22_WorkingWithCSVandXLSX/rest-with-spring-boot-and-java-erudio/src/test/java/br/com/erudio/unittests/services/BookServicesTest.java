@@ -15,10 +15,19 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PagedResourcesAssembler;
+import org.springframework.hateoas.EntityModel;
+import org.springframework.hateoas.Link;
+import org.springframework.hateoas.PagedModel;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
@@ -34,6 +43,9 @@ class BookServicesTest {
 
     @Mock
     BookRepository repository;
+
+    @Mock
+    PagedResourcesAssembler<BookDTO> assembler;
 
     @BeforeEach
     void setUp() {
@@ -245,12 +257,33 @@ class BookServicesTest {
     }
 
     @Test
-    @Disabled("REASON: Still Under Development")
     void findAll() {
-        List<Book> list = input.mockEntityList();
-        when(repository.findAll()).thenReturn(list);
-        List<BookDTO> books = new ArrayList<>();//service.findAll();
+        List<Book> mockEntityList = input.mockEntityList();
+        Page<Book> mockPage = new PageImpl<>(mockEntityList);
+        when(repository.findAll(any(Pageable.class))).thenReturn(mockPage);
 
+        List<BookDTO> mockDtoList = input.mockDTOList();
+        List<EntityModel<BookDTO>> entityModels = mockDtoList.stream()
+                .map(EntityModel::of)
+                .collect(Collectors.toList());
+
+        PagedModel.PageMetadata pageMetadata = new PagedModel.PageMetadata(
+                mockPage.getSize(),
+                mockPage.getNumber(),
+                mockPage.getTotalElements(),
+                mockPage.getTotalPages()
+        );
+
+        PagedModel<EntityModel<BookDTO>> mockPagedModel = PagedModel.of(entityModels, pageMetadata);
+        when(assembler.toModel(any(Page.class), any(Link.class))).thenReturn(mockPagedModel);
+
+        // Executando o método findAll
+        var result = service.findAll(PageRequest.of(0, 14));
+        List<BookDTO> books = result.getContent().stream()
+                .map(EntityModel::getContent)
+                .collect(Collectors.toList());
+
+        // Validações específicas
         assertNotNull(books);
         assertEquals(14, books.size());
 
