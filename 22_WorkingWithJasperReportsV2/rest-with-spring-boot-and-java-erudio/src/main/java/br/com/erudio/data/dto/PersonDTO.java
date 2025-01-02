@@ -68,6 +68,15 @@ public class PersonDTO extends RepresentationModel<PersonDTO> implements Seriali
         this.enabled = enabled;
     }
 
+    /**
+     * Retorna o nome completo concatenando firstName e lastName.
+     * Este método será lido pelo JasperReports como o campo "name".
+     */
+    public String getName() {
+        return (firstName != null ? firstName : "") +
+                (lastName != null ? " " + lastName : "");
+    }
+
     @Override
     public boolean equals(Object o) {
         if (o == null || getClass() != o.getClass()) return false;
