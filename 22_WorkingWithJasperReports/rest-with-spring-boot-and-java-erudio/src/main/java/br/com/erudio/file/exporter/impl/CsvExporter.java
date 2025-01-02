@@ -1,6 +1,7 @@
 package br.com.erudio.file.exporter.impl;
 
 import br.com.erudio.data.dto.PersonDTO;
+import br.com.erudio.file.exporter.FileExportResponse;
 import br.com.erudio.file.exporter.contract.FileExporter;
 import org.apache.commons.csv.CSVFormat;
 import org.apache.commons.csv.CSVPrinter;
@@ -17,7 +18,7 @@ import java.util.List;
 public class CsvExporter implements FileExporter {
 
     @Override
-    public Resource exportFile(List<PersonDTO> people) throws Exception {
+    public FileExportResponse exportFile(List<PersonDTO> people) throws Exception {
         ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
         OutputStreamWriter writer = new OutputStreamWriter(outputStream, StandardCharsets.UTF_8);
 
@@ -39,6 +40,7 @@ public class CsvExporter implements FileExporter {
             }
 
         }
-        return new ByteArrayResource(outputStream.toByteArray());
+        Resource resource = new ByteArrayResource(outputStream.toByteArray());
+        return new FileExportResponse(resource, "people_exported.csv"); // Retornando o Resource e o nome do arquivo
     }
 }

@@ -1,6 +1,7 @@
 package br.com.erudio.file.exporter.impl;
 
 import br.com.erudio.data.dto.PersonDTO;
+import br.com.erudio.file.exporter.FileExportResponse;
 import br.com.erudio.file.exporter.contract.FileExporter;
 import org.apache.poi.ss.usermodel.*;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
@@ -15,7 +16,7 @@ import java.util.List;
 public class XlsxExporter implements FileExporter {
 
     @Override
-    public Resource exportFile(List<PersonDTO> people) throws Exception {
+    public FileExportResponse exportFile(List<PersonDTO> people) throws Exception {
         try (Workbook workbook = new XSSFWorkbook()){
             Sheet sheet = workbook.createSheet("People");
 
@@ -46,7 +47,9 @@ public class XlsxExporter implements FileExporter {
             ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
             workbook.write(outputStream);
 
-            return new ByteArrayResource(outputStream.toByteArray());
+            Resource resource = new ByteArrayResource(outputStream.toByteArray());
+
+            return new FileExportResponse(resource, "people_exported.xlsx"); // Retornando o Resource e o nome do arquivo
         }
     }
 

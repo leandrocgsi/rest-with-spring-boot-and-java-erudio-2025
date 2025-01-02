@@ -9,6 +9,7 @@ import br.com.erudio.exception.ResourceNotFoundException;
 
 import static br.com.erudio.mapper.ObjectMapper.parseObject;
 
+import br.com.erudio.file.exporter.FileExportResponse;
 import br.com.erudio.file.exporter.MediaTypes;
 import br.com.erudio.file.exporter.contract.FileExporter;
 import br.com.erudio.file.exporter.factory.FileExporterFactory;
@@ -72,7 +73,7 @@ public class PersonServices {
         return buildPagedModel(pageable, people);
     }
 
-    public Resource exportPage(Pageable pageable, String acceptHeader) {
+    public FileExportResponse exportPage(Pageable pageable, String acceptHeader) {
 
         logger.info("Exporting a People page!");
 

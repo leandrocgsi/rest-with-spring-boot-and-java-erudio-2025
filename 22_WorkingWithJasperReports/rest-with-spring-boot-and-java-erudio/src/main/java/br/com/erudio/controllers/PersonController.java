@@ -2,7 +2,9 @@ package br.com.erudio.controllers;
 
 import br.com.erudio.controllers.docs.PersonControllerDocs;
 import br.com.erudio.data.dto.PersonDTO;
+import br.com.erudio.file.exporter.FileExportResponse;
 import br.com.erudio.file.exporter.MediaTypes;
+import br.com.erudio.file.exporter.contract.FileExporter;
 import br.com.erudio.services.PersonServices;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.servlet.http.HttpServletRequest;
@@ -48,7 +50,8 @@ public class PersonController implements PersonControllerDocs {
 
     @GetMapping(value = "/exportPage", produces = {
             MediaTypes.APPLICATION_XLSX_VALUE,
-            MediaTypes.APPLICATION_CSV_VALUE})
+            MediaTypes.APPLICATION_CSV_VALUE,
+            MediaTypes.APPLICATION_PDF_VALUE})
     @Override
     public ResponseEntity<Resource> exportPage(
             @RequestParam(value = "page", defaultValue = "0") Integer page,
@@ -61,19 +64,17 @@ public class PersonController implements PersonControllerDocs {
 
         String acceptHeader = request.getHeader(HttpHeaders.ACCEPT);
 
-        Resource file = service.exportPage(pageable, acceptHeader);
-
+        FileExportResponse exportResponse = service.exportPage(pageable, acceptHeader);
 
         var contentType = acceptHeader != null ? acceptHeader : "application/octet-stream";
-        var fileExtension = MediaTypes.APPLICATION_XLSX_VALUE.equalsIgnoreCase(acceptHeader) ? ".xlsx" : ".csv";
-        var filename = "people_exported" + fileExtension;
+        var filename = exportResponse.fileName(); // Recuperar o nome do arquivo
 
         return ResponseEntity.ok()
             .contentType(MediaType.parseMediaType(contentType))
             .header(
                 HttpHeaders.CONTENT_DISPOSITION,
                 "attachment; filename=\"" + filename + "\"")
-            .body(file);
+            .body(exportResponse.resource());
     }
 
     @GetMapping(value = "/findPeopleByName/{firstName}", produces = {

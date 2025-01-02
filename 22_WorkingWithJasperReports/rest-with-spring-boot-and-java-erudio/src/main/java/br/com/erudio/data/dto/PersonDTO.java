@@ -18,6 +18,9 @@ public class PersonDTO extends RepresentationModel<PersonDTO> implements Seriali
     private String gender;
     private Boolean enabled;
 
+    // Novo atributo agregado
+    private String name;
+
     public PersonDTO() {}
 
     public Long getId() {
@@ -67,6 +70,16 @@ public class PersonDTO extends RepresentationModel<PersonDTO> implements Seriali
     public void setEnabled(Boolean enabled) {
         this.enabled = enabled;
     }
+
+    /**
+     * Retorna o nome completo concatenando firstName e lastName.
+     * Este método será lido pelo JasperReports como o campo "name".
+     */
+    public String getName() {
+        return (firstName != null ? firstName : "") +
+                (lastName != null ? " " + lastName : "");
+    }
+
 
     @Override
     public boolean equals(Object o) {

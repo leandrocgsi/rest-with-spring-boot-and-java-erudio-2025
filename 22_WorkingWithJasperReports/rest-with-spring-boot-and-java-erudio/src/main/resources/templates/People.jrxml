@@ -64,23 +64,23 @@ ORDER BY
 		</element>
 	</pageHeader>
 	<columnHeader height="30" splitType="Stretch">
-		<element kind="staticText" uuid="f7326a85-3216-4e3f-b551-e92000f06b0d" mode="Opaque" x="0" y="0" width="50" height="30" forecolor="#FFFFFF" backcolor="#23555F" fontName="Calibri" fontSize="12.0" bold="true" hTextAlign="Center" vTextAlign="Middle">
+		<element kind="staticText" uuid="f7326a85-3216-4e3f-b551-e92000f06b0d" mode="Opaque" x="0" y="0" width="50" height="30" forecolor="#FFFFFF" backcolor="#23555F" fontName="Arial" fontSize="12.0" bold="true" hTextAlign="Center" vTextAlign="Middle">
 			<text><![CDATA[Code]]></text>
 			<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="2ae8606e-83fb-4c53-946b-d535565d394e"/>
 		</element>
-		<element kind="staticText" uuid="412c538e-d680-48de-8e5c-cd1daaf44f84" mode="Opaque" x="280" y="0" width="100" height="30" forecolor="#FFFFFF" backcolor="#23555F" fontName="Calibri" fontSize="12.0" bold="true" hTextAlign="Center" vTextAlign="Middle">
+		<element kind="staticText" uuid="412c538e-d680-48de-8e5c-cd1daaf44f84" mode="Opaque" x="280" y="0" width="100" height="30" forecolor="#FFFFFF" backcolor="#23555F" fontName="Arial" fontSize="12.0" bold="true" hTextAlign="Center" vTextAlign="Middle">
 			<text><![CDATA[Address]]></text>
 			<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="c2dca509-d390-4669-8b56-76f9b210ed03"/>
 		</element>
-		<element kind="staticText" uuid="5663c929-1bc5-4cca-bd7e-bca34cb99a5f" mode="Opaque" x="50" y="0" width="230" height="30" forecolor="#FFFFFF" backcolor="#23555F" fontName="Calibri" fontSize="12.0" bold="true" hTextAlign="Center" vTextAlign="Middle">
+		<element kind="staticText" uuid="5663c929-1bc5-4cca-bd7e-bca34cb99a5f" mode="Opaque" x="50" y="0" width="230" height="30" forecolor="#FFFFFF" backcolor="#23555F" fontName="Arial" fontSize="12.0" bold="true" hTextAlign="Center" vTextAlign="Middle">
 			<text><![CDATA[Name]]></text>
 			<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="be22f897-582c-4564-a008-61c776474a5c"/>
 		</element>
-		<element kind="staticText" uuid="b3304dac-446c-46a0-8ab6-323774711de3" mode="Opaque" x="380" y="0" width="100" height="30" forecolor="#FFFFFF" backcolor="#23555F" fontName="Calibri" fontSize="12.0" bold="true" hTextAlign="Center" vTextAlign="Middle">
+		<element kind="staticText" uuid="b3304dac-446c-46a0-8ab6-323774711de3" mode="Opaque" x="380" y="0" width="100" height="30" forecolor="#FFFFFF" backcolor="#23555F" fontName="Arial" fontSize="12.0" bold="true" hTextAlign="Center" vTextAlign="Middle">
 			<text><![CDATA[Gender]]></text>
 			<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="c74654fa-2478-427f-9886-8d17a7315b07"/>
 		</element>
-		<element kind="staticText" uuid="874f9f15-36f3-4fae-a8e0-5f3e36fdbf64" mode="Opaque" x="480" y="0" width="75" height="30" forecolor="#FFFFFF" backcolor="#23555F" fontName="Calibri" fontSize="12.0" bold="true" hTextAlign="Center" vTextAlign="Middle">
+		<element kind="staticText" uuid="874f9f15-36f3-4fae-a8e0-5f3e36fdbf64" mode="Opaque" x="480" y="0" width="75" height="30" forecolor="#FFFFFF" backcolor="#23555F" fontName="Arial" fontSize="12.0" bold="true" hTextAlign="Center" vTextAlign="Middle">
 			<text><![CDATA[Enabled]]></text>
 			<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="8533200f-72ff-4de8-a4e5-325d6db1c4e9"/>
 		</element>
