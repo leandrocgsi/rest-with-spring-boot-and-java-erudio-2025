@@ -41,4 +41,10 @@ public class CsvExporter implements FileExporter {
         }
         return new ByteArrayResource(outputStream.toByteArray());
     }
+
+    @Override
+    // TODO
+    public Resource exportPerson(PersonDTO person) throws Exception {
+        return null;
+    }
 }

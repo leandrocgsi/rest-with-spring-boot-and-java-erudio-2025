@@ -58,4 +58,10 @@ public class XlsxExporter implements FileExporter {
         style.setAlignment(HorizontalAlignment.CENTER);
         return style;
     }
+
+    @Override
+    // TODO
+    public Resource exportPerson(PersonDTO person) throws Exception {
+        return null;
+    }
 }
