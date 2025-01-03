@@ -6,6 +6,7 @@
 		<defaultValueExpression><![CDATA[$P{personId}]]></defaultValueExpression>
 	</parameter>
 	<parameter name="QRCodeImage" class="java.io.InputStream"/>
+	<parameter name="SUBREPORT_DIR" class="java.lang.String"/>
 	<query language="SQL"><![CDATA[SELECT id, 
 CONCAT(first_name, ' ', last_name) AS name,
 	address,
@@ -91,7 +92,7 @@ WHERE
 		<band height="160" splitType="Stretch">
 			<element kind="subreport" uuid="0fa73510-6f98-42a8-b6a4-05eda2f8784f" x="0" y="0" width="555" height="160">
 				<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
-				<expression><![CDATA["books.jasper"]]></expression>
+				<expression><![CDATA[$P{SUBREPORT_DIR}]]></expression>
 				<parameter name="personId">
 					<expression><![CDATA[$P{personId}]]></expression>
 				</parameter>

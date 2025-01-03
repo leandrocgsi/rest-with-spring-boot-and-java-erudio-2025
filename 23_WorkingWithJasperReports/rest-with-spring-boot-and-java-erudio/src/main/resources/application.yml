@@ -26,15 +26,16 @@ spring:
 logging:
   level:
     root: INFO
+    net.sf.jasperreports.engine.*: TRACE
     # root: WARN
     # br.com.erudio: DEBUG
-net:
-  sf:
-    jasperreports:
-      components:
-        barcode4j:
-          image:
-            producer=image
+#net:
+#  sf:
+#    jasperreports:
+#      components:
+#        barcode4j:
+#          image:
+#            producer=image
 spring-doc:
   paths-to-match: /api/**/v1/**
   swagger-ui:

@@ -71,7 +71,10 @@ public class PdfExporter implements FileExporter {
 
         // Configura os parâmetros para o relatório principal
         Map<String, Object> parameters = new HashMap<>();
-        parameters.put("SUBREPORT_DIR", "/templates/"); // Diretório base do subrelatório
+        // parameters.put("SUBREPORT_DIR", "/templates/"); // Diretório base do subrelatório
+        String path = getClass().getResource("/templates/books.jasper").getPath();
+        //parameters.put("SUBREPORT_DIR", path);
+        parameters.put("SUBREPORT_DIR", "D:/Code/Java/rest-with-spring-boot-and-java-erudio-2025/23_WorkingWithJasperReports/rest-with-spring-boot-and-java-erudio/target/classes/templates/books.jasper");
         parameters.put("booksSubreport", subReport);
         parameters.put("booksDataSource", subReportDataSource);
         parameters.put("QRCodeImage", qrCodeStream); // Passa o QR Code como parâmetro

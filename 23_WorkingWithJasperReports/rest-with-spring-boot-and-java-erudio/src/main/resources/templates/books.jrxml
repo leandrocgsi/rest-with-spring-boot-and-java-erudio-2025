@@ -14,7 +14,7 @@
   b.id,
   b.title,
   b.author,
-  b.launch_date,
+  b.launch_date as launchDate,
   b.price
 FROM books b
 JOIN person_books pb ON pb.book_id = b.id
@@ -35,9 +35,9 @@ WHERE pb.person_id = $P{personId}
 		<property name="com.jaspersoft.studio.field.label" value="author"/>
 		<property name="com.jaspersoft.studio.field.tree.path" value="books"/>
 	</field>
-	<field name="launch_date" class="java.sql.Timestamp">
-		<property name="com.jaspersoft.studio.field.name" value="launch_date"/>
-		<property name="com.jaspersoft.studio.field.label" value="launch_date"/>
+	<field name="launchDate" class="java.sql.Timestamp">
+		<property name="com.jaspersoft.studio.field.name" value="launchDate"/>
+		<property name="com.jaspersoft.studio.field.label" value="launchDate"/>
 		<property name="com.jaspersoft.studio.field.tree.path" value="books"/>
 	</field>
 	<field name="price" class="java.math.BigDecimal">
@@ -83,7 +83,7 @@ WHERE pb.person_id = $P{personId}
 				<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="ff8696c2-37dd-404a-a650-68d5fc54ab72"/>
 			</element>
 			<element kind="textField" uuid="af3608e8-c33a-410c-97d9-ebb6eed17d23" mode="Transparent" x="360" y="0" width="60" height="30" linkType="None" linkTarget="Self" hTextAlign="Center" vTextAlign="Middle">
-				<expression><![CDATA[new java.text.SimpleDateFormat("dd/MM/yyyy").format($F{launch_date})]]></expression>
+				<expression><![CDATA[new java.text.SimpleDateFormat("dd/MM/yyyy").format($F{launchDate})]]></expression>
 				<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="232793f7-a336-4538-a4c2-84dd0472a0c3"/>
 			</element>
 			<element kind="textField" uuid="cda13a16-d1a6-47da-b99c-04ad73572c97" mode="Transparent" x="420" y="0" width="64" height="30" linkType="None" linkTarget="Self" hTextAlign="Center" vTextAlign="Middle">
