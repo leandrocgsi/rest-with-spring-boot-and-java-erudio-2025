@@ -2,17 +2,14 @@ package br.com.erudio.file.exporter.impl;
 
 import br.com.erudio.data.dto.PersonDTO;
 import br.com.erudio.file.exporter.contract.FileExporter;
-import com.google.zxing.BarcodeFormat;
-import com.google.zxing.client.j2se.MatrixToImageWriter;
-import com.google.zxing.common.BitMatrix;
-import com.google.zxing.qrcode.QRCodeWriter;
+import br.com.erudio.services.QRCodeService;
 import net.sf.jasperreports.engine.*;
 import net.sf.jasperreports.engine.data.JRBeanCollectionDataSource;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.ByteArrayResource;
 import org.springframework.core.io.Resource;
 import org.springframework.stereotype.Component;
 
-import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.InputStream;
 import java.util.Collections;
@@ -22,6 +19,9 @@ import java.util.Map;
 
 @Component
 public class PdfExporter implements FileExporter {
+
+    @Autowired
+    QRCodeService qrCodeService;
 
     @Override
     public Resource exportFile(List<PersonDTO> people) throws Exception {
@@ -64,7 +64,7 @@ public class PdfExporter implements FileExporter {
         JasperReport mainReport = JasperCompileManager.compileReport(mainTemplateStream);
 
         // Gera o QR Code e passa como parâmetro
-        InputStream qrCodeStream = generateQRCode(person.getProfileUrl(), 200, 200);
+        InputStream qrCodeStream = qrCodeService.createQRCode(person.getProfileUrl(), 200, 200);
 
         // Configura o DataSource do subrelatório
         JRBeanCollectionDataSource subReportDataSource = new JRBeanCollectionDataSource(person.getBooks());
@@ -90,14 +90,5 @@ public class PdfExporter implements FileExporter {
             JasperExportManager.exportReportToPdfStream(jasperPrint, outputStream);
             return new ByteArrayResource(outputStream.toByteArray());
         }
-    }
-
-    private InputStream generateQRCode(String text, int width, int height) throws Exception {
-        QRCodeWriter qrCodeWriter = new QRCodeWriter();
-        BitMatrix bitMatrix = qrCodeWriter.encode(text, BarcodeFormat.QR_CODE, width, height);
-
-        ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
-        MatrixToImageWriter.writeToStream(bitMatrix, "PNG", outputStream);
-        return new ByteArrayInputStream(outputStream.toByteArray());
     }
 }
