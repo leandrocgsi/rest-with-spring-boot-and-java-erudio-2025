@@ -2,12 +2,12 @@
 <jasperReport name="person" language="java" pageWidth="595" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="c70c89de-3030-4840-a237-0691473a9591">
 	<property name="com.jaspersoft.studio.data.sql.tables" value="cmVzdF93aXRoX3NwcmluZ19ib290X2VydWRpbzIucGVyc29uIEFTICwxMTAsNDcsZWM2Y2U5ZTEt&#xa;OTc3Yy00YTMxLTkzZGMtZTU4MDkxZGM0ODAyOw=="/>
 	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="MySQL Connection"/>
-	<parameter name="personId" class="java.lang.String">
-		<defaultValueExpression><![CDATA[$P{personId}]]></defaultValueExpression>
+	<parameter name="PERSON_ID" class="java.lang.String">
+		<defaultValueExpression><![CDATA[$P{PERSON_ID}]]></defaultValueExpression>
 	</parameter>
-	<parameter name="QRCodeImage" class="java.io.InputStream"/>
-	<parameter name="SUBREPORT_DIR" class="java.lang.String"/>
-	<parameter name="SUBREPORT_DATA_SOURCE" class="net.sf.jasperreports.engine.data.JRBeanCollectionDataSource"/>
+	<parameter name="QR_CODE_IMAGE" class="java.io.InputStream"/>
+	<parameter name="SUB_REPORT_DIR" class="java.lang.String"/>
+	<parameter name="SUB_REPORT_DATA_SOURCE" class="net.sf.jasperreports.engine.data.JRBeanCollectionDataSource"/>
 	<query language="SQL"><![CDATA[SELECT id, 
 CONCAT(first_name, ' ', last_name) AS name,
 	address,
@@ -17,7 +17,7 @@ CONCAT(first_name, ' ', last_name) AS name,
 	photo_url AS photoUrl
 FROM rest_with_spring_boot_erudio2.person
 WHERE 
-	 id = $P{personId}
+	 id = $P{PERSON_ID}
 ]]></query>
 	<field name="id" class="java.lang.Long">
 		<property name="com.jaspersoft.studio.field.name" value="id"/>
@@ -86,16 +86,16 @@ WHERE
 			<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="6462a5dc-8736-4635-9493-e5b8bf83f6a6"/>
 		</element>
 		<element kind="image" uuid="bcc7bc21-542b-430c-8c26-24c427c1a2f2" x="218" y="10" width="162" height="150">
-			<expression><![CDATA[$P{QRCodeImage}]]></expression>
+			<expression><![CDATA[$P{QR_CODE_IMAGE}]]></expression>
 		</element>
 	</title>
 	<detail>
 		<band height="160" splitType="Stretch">
 			<element kind="subreport" uuid="0fa73510-6f98-42a8-b6a4-05eda2f8784f" x="0" y="0" width="555" height="160">
-				<dataSourceExpression><![CDATA[$P{SUBREPORT_DATA_SOURCE}]]></dataSourceExpression>
-				<expression><![CDATA[$P{SUBREPORT_DIR}]]></expression>
-				<parameter name="personId">
-					<expression><![CDATA[$P{personId}]]></expression>
+				<dataSourceExpression><![CDATA[$P{SUB_REPORT_DATA_SOURCE}]]></dataSourceExpression>
+				<expression><![CDATA[$P{SUB_REPORT_DIR}]]></expression>
+				<parameter name="PERSON_ID">
+					<expression><![CDATA[$P{PERSON_ID}]]></expression>
 				</parameter>
 			</element>
 		</band>
