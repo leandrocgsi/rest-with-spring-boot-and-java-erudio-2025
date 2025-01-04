@@ -1,26 +1,14 @@
 <!-- Created with Jaspersoft Studio version 7.0.1.final using JasperReports Library version 7.0.1-573496633c2b4074e32f433154b543003f7d2498  -->
 <jasperReport name="books" language="java" pageWidth="595" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="35d01279-cd5a-45fa-b42f-714ab62001ee">
-	<property name="com.jaspersoft.studio.data.sql.tables" value="cmVzdF93aXRoX3NwcmluZ19ib290X2VydWRpbzIuYm9va3MgQVMgLDE2MCwxNzQsY2QyY2QwYTYt&#xa;ODQ3YS00OWFiLWI1ZDMtMmJmMjMxNDhlNmExOw=="/>
+	<property name="com.jaspersoft.studio.data.sql.tables" value="cGVyc29uX2Jvb2tzICw5NSwxNSw5NTk4OTExMy1lMzNlLTRhYWMtYmY4YS1kZWRiYzdmMDNhZmM7&#xa;Ym9va3MgLDE1LDE1LDUxM2NkMTQ0LTAwMzgtNGM1Yy1iNjBkLWNkZWNkZGIwNGU4ODs="/>
 	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="MySQL Connection"/>
 	<style name="zebraStyle">
 		<conditionalStyle backcolor="#E0E0E0">
 			<conditionExpression><![CDATA[$V{REPORT_COUNT} % 2 == 0]]></conditionExpression>
 		</conditionalStyle>
 	</style>
-	<parameter name="personId" class="java.lang.String">
-		<defaultValueExpression><![CDATA[$P{personId}]]></defaultValueExpression>
-	</parameter>
-	<query language="SQL"><![CDATA[SELECT 
-  b.id,
-  b.title,
-  b.author,
-  b.launch_date as launchDate,
-  b.price
-FROM books b
-JOIN person_books pb ON pb.book_id = b.id
-WHERE pb.person_id = $P{personId}
-]]></query>
-	<field name="id" class="java.lang.Integer">
+	<parameter name="SUBREPORT_DATA_SOURCE" class="net.sf.jasperreports.engine.data.JRBeanCollectionDataSource"/>
+	<field name="id" class="java.lang.Long">
 		<property name="com.jaspersoft.studio.field.name" value="id"/>
 		<property name="com.jaspersoft.studio.field.label" value="id"/>
 		<property name="com.jaspersoft.studio.field.tree.path" value="books"/>
@@ -35,12 +23,12 @@ WHERE pb.person_id = $P{personId}
 		<property name="com.jaspersoft.studio.field.label" value="author"/>
 		<property name="com.jaspersoft.studio.field.tree.path" value="books"/>
 	</field>
-	<field name="launchDate" class="java.sql.Timestamp">
+	<field name="launchDate" class="java.util.Date">
 		<property name="com.jaspersoft.studio.field.name" value="launchDate"/>
 		<property name="com.jaspersoft.studio.field.label" value="launchDate"/>
 		<property name="com.jaspersoft.studio.field.tree.path" value="books"/>
 	</field>
-	<field name="price" class="java.math.BigDecimal">
+	<field name="price" class="java.lang.Double">
 		<property name="com.jaspersoft.studio.field.name" value="price"/>
 		<property name="com.jaspersoft.studio.field.label" value="price"/>
 		<property name="com.jaspersoft.studio.field.tree.path" value="books"/>
