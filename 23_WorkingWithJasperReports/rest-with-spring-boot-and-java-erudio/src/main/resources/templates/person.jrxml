@@ -15,7 +15,7 @@ CONCAT(first_name, ' ', last_name) AS name,
 	enabled,
 	wikipedia_profile_url AS profileUrl,
 	photo_url AS photoUrl
-FROM rest_with_spring_boot_erudio2.person
+FROM rest_with_spring_boot_erudio.person
 WHERE 
 	 id = $P{PERSON_ID}
 ]]></query>
