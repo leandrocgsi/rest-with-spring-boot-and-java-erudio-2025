@@ -83,7 +83,6 @@ public class AuthServices {
 		return ResponseEntity.ok(tokenResponse);
 	}
 
-
 	public AccountCredentialsVO create(AccountCredentialsVO user) {
 		if (user == null) throw new RequiredObjectIsNullException();
 
@@ -98,7 +97,6 @@ public class AuthServices {
 		entity.setEnabled(true);
 		return parseObject(repository.save(entity), AccountCredentialsVO.class);
 	}
-
 
 	private String generateHashedPassword(String password) {
 		Map<String, PasswordEncoder> encoders = new HashMap<>();

@@ -1,6 +1,6 @@
 package br.com.erudio.controllers;
 
-import br.com.erudio.data.dto.PersonDTO;
+import br.com.erudio.controllers.docs.AuthControllerDocs;
 import br.com.erudio.data.dto.security.AccountCredentialsVO;
 import br.com.erudio.services.AuthServices;
 import io.swagger.v3.oas.annotations.Operation;
@@ -15,7 +15,7 @@ import org.springframework.web.bind.annotation.*;
 @Tag(name = "Authentication Endpoint")
 @RestController
 @RequestMapping("/auth")
-public class AuthController {
+public class AuthController implements AuthControllerDocs {
 
 	@Autowired
 	AuthServices authServices;
@@ -23,6 +23,7 @@ public class AuthController {
 	@SuppressWarnings("rawtypes")
 	@Operation(summary = "Authenticates a user and returns a token")
 	@PostMapping(value = "/signin")
+	@Override
 	public ResponseEntity signin(@RequestBody AccountCredentialsVO credentials) {
 		if (checkIfParamsIsNotNull(credentials))
 			return ResponseEntity.status(HttpStatus.FORBIDDEN).body("Invalid client request!");
@@ -34,6 +35,7 @@ public class AuthController {
 	@SuppressWarnings("rawtypes")
 	@Operation(summary = "Refresh token for authenticated user and returns a token")
 	@PutMapping(value = "/refresh/{username}")
+	@Override
 	public ResponseEntity refreshToken(@PathVariable("username") String username,
 									   @RequestHeader("Authorization") String refreshToken) {
 		if (checkIfParamsIsNotNull(username, refreshToken))
@@ -53,6 +55,7 @@ public class AuthController {
 					MediaType.APPLICATION_XML_VALUE,
 					MediaType.APPLICATION_YAML_VALUE}
 	)
+	@Override
 	public AccountCredentialsVO create(@RequestBody AccountCredentialsVO user) {
 		return authServices.create(user);
 	}
