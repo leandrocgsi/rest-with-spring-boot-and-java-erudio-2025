@@ -1,6 +1,7 @@
 package br.com.erudio.data.dto.security;
 
 import java.io.Serializable;
+import java.util.Objects;
 
 public class AccountCredentialsVO implements Serializable{
 
@@ -8,10 +9,19 @@ public class AccountCredentialsVO implements Serializable{
 	
 	private String username;
 	private String password;
-	
+	private String fullName;
+
+	public AccountCredentialsVO(){}
+
 	public AccountCredentialsVO(String username, String password) {
 		this.username = username;
 		this.password = password;
+	}
+
+	public AccountCredentialsVO(String username, String password, String fullName) {
+		this.username = username;
+		this.password = password;
+		this.fullName = fullName;
 	}
 
 	public String getUsername() {
@@ -30,34 +40,23 @@ public class AccountCredentialsVO implements Serializable{
 		this.password = password;
 	}
 
-	@Override
-	public int hashCode() {
-		final int prime = 31;
-		int result = 1;
-		result = prime * result + ((password == null) ? 0 : password.hashCode());
-		result = prime * result + ((username == null) ? 0 : username.hashCode());
-		return result;
+	public String getFullName() {
+		return fullName;
+	}
+
+	public void setFullName(String fullName) {
+		this.fullName = fullName;
 	}
 
 	@Override
-	public boolean equals(Object obj) {
-		if (this == obj)
-			return true;
-		if (obj == null)
-			return false;
-		if (getClass() != obj.getClass())
-			return false;
-		AccountCredentialsVO other = (AccountCredentialsVO) obj;
-		if (password == null) {
-			if (other.password != null)
-				return false;
-		} else if (!password.equals(other.password))
-			return false;
-		if (username == null) {
-			if (other.username != null)
-				return false;
-		} else if (!username.equals(other.username))
-			return false;
-		return true;
+	public boolean equals(Object o) {
+		if (o == null || getClass() != o.getClass()) return false;
+		AccountCredentialsVO that = (AccountCredentialsVO) o;
+		return Objects.equals(getUsername(), that.getUsername()) && Objects.equals(getPassword(), that.getPassword()) && Objects.equals(getFullName(), that.getFullName());
+	}
+
+	@Override
+	public int hashCode() {
+		return Objects.hash(getUsername(), getPassword(), getFullName());
 	}
 }
