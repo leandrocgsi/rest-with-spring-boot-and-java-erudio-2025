@@ -2,6 +2,9 @@ cors:
   originPatterns: http://localhost:8080,http://localhost:3000,https://www.erudio.com.br
 file:
   upload-dir: /Code/UploadDir
+email:
+  subject: "Default Subject"     # Assunto padrão do e-mail
+  message: "Default Message"     # Mensagem padrão do e-mail
 spring:
   application:
     name: rest-with-spring-boot-and-java-erudio
@@ -17,6 +20,15 @@ spring:
       hibernate:
     show-sql: false
     open-in-view: false
+  mail:
+    host: smtp.gmail.com              # Endereço do servidor SMTP do Google
+    port: 587                         # Porta para TLS
+    username: ${EMAIL_USERNAME}        # Variável de ambiente para o e-mail do Gmail
+    password: ${EMAIL_PASSWORD}        # Variável de ambiente para a senha do app
+    properties:
+      mail.smtp.auth: true            # Habilitar autenticação SMTP
+      mail.smtp.starttls.enable: true # Habilitar STARTTLS
+      mail.smtp.starttls.required: true # Exigir STARTTLS
   servlet:
     multipart:
       enabled: true
@@ -26,6 +38,7 @@ spring:
 logging:
   level:
     root: INFO
+    org.springframework.mail: TRACE
     # net.sf.jasperreports.engine.*: TRACE
     # root: WARN
     # br.com.erudio: DEBUG
