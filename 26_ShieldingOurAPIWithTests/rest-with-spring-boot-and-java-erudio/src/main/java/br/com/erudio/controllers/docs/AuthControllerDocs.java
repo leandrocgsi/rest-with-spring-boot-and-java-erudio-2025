@@ -19,7 +19,7 @@ public interface AuthControllerDocs {
                     @ApiResponse(description = "Internal Server Error", responseCode = "500", content = @Content)
             }
     )
-    ResponseEntity<?> signin(AccountCredentialsDTO credentials);
+    ResponseEntity signin(AccountCredentialsDTO credentials);
 
     @Operation(
             summary = "Refresh token for authenticated user and returns a token",
@@ -32,7 +32,7 @@ public interface AuthControllerDocs {
                     @ApiResponse(description = "Internal Server Error", responseCode = "500", content = @Content)
             }
     )
-    ResponseEntity<?> refreshToken(
+    ResponseEntity refreshToken(
             String username,
             String refreshToken);
 
