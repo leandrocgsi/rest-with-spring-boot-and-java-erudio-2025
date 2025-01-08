@@ -4,7 +4,7 @@ import java.io.Serializable;
 import java.util.Objects;
 import jakarta.xml.bind.annotation.XmlRootElement;
 
-//@XmlRootElement
+@XmlRootElement
 public class AccountCredentialsDTO implements Serializable{
 
 	private static final long serialVersionUID = 1L;
