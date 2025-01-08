@@ -4,7 +4,7 @@ import java.util.Base64;
 import java.util.Date;
 import java.util.List;
 
-import br.com.erudio.data.dto.security.TokenVO;
+import br.com.erudio.data.dto.security.TokenDTO;
 import br.com.erudio.exception.InvalidJwtAuthenticationException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -43,17 +43,17 @@ public class JwtTokenProvider {
 		algorithm = Algorithm.HMAC256(secretKey.getBytes());
 	}
 
-	public TokenVO createAccessToken(String username, List<String> roles) {
+	public TokenDTO createAccessToken(String username, List<String> roles) {
 		Date now = new Date();
 		Date validity = new Date(now.getTime() + validityInMilliseconds);
 		var accessToken = getAccessToken(username, roles, now, validity);
 		var refreshToken = getRefreshToken(username, roles, now);
 		
-		return new TokenVO(username, true, now, validity, accessToken, refreshToken);
+		return new TokenDTO(username, true, now, validity, accessToken, refreshToken);
 	}
 
 	
-	public TokenVO refreshToken(String refreshToken) {
+	public TokenDTO refreshToken(String refreshToken) {
 		if (refreshToken.contains("Bearer ")) refreshToken =
 				refreshToken.substring("Bearer ".length());
 		

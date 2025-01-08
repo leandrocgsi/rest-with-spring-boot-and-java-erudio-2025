@@ -1,7 +1,7 @@
 package br.com.erudio.controllers;
 
 import br.com.erudio.controllers.docs.AuthControllerDocs;
-import br.com.erudio.data.dto.security.AccountCredentialsVO;
+import br.com.erudio.data.dto.security.AccountCredentialsDTO;
 import br.com.erudio.services.AuthServices;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -24,7 +24,7 @@ public class AuthController implements AuthControllerDocs {
 	@Operation(summary = "Authenticates a user and returns a token")
 	@PostMapping(value = "/signin")
 	@Override
-	public ResponseEntity signin(@RequestBody AccountCredentialsVO credentials) {
+	public ResponseEntity signin(@RequestBody AccountCredentialsDTO credentials) {
 		if (checkIfParamsIsNotNull(credentials))
 			return ResponseEntity.status(HttpStatus.FORBIDDEN).body("Invalid client request!");
 		var token = authServices.signin(credentials);
@@ -56,7 +56,7 @@ public class AuthController implements AuthControllerDocs {
 					MediaType.APPLICATION_YAML_VALUE}
 	)
 	@Override
-	public AccountCredentialsVO create(@RequestBody AccountCredentialsVO user) {
+	public AccountCredentialsDTO create(@RequestBody AccountCredentialsDTO user) {
 		return authServices.create(user);
 	}
 
@@ -65,7 +65,7 @@ public class AuthController implements AuthControllerDocs {
 				StringUtils.isBlank(username);
 	}
 
-	private boolean checkIfParamsIsNotNull(AccountCredentialsVO credentials) {
+	private boolean checkIfParamsIsNotNull(AccountCredentialsDTO credentials) {
 		return credentials == null || StringUtils.isBlank(credentials.getUsername())
 			 || StringUtils.isBlank(credentials.getPassword());
 	}

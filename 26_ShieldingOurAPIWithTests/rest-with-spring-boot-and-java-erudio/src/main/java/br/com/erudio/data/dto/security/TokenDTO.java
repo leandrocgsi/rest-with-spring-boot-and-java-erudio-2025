@@ -3,7 +3,7 @@ package br.com.erudio.data.dto.security;
 import java.io.Serializable;
 import java.util.Date;
 
-public class TokenVO implements Serializable{
+public class TokenDTO implements Serializable{
 
 	private static final long serialVersionUID = 1L;
 	
@@ -14,9 +14,9 @@ public class TokenVO implements Serializable{
 	private String accessToken;
 	private String refreshToken;
 	
-	public TokenVO() {}
+	public TokenDTO() {}
 	
-	public TokenVO(
+	public TokenDTO(
 			String username,
 			Boolean authenticated,
 			Date created,
@@ -100,7 +100,7 @@ public class TokenVO implements Serializable{
 			return false;
 		if (getClass() != obj.getClass())
 			return false;
-		TokenVO other = (TokenVO) obj;
+		TokenDTO other = (TokenDTO) obj;
 		if (accessToken == null) {
 			if (other.accessToken != null)
 				return false;

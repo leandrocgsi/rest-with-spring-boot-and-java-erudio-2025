@@ -1,7 +1,7 @@
 package br.com.erudio.services;
 
-import br.com.erudio.data.dto.security.AccountCredentialsVO;
-import br.com.erudio.data.dto.security.TokenVO;
+import br.com.erudio.data.dto.security.AccountCredentialsDTO;
+import br.com.erudio.data.dto.security.TokenDTO;
 import br.com.erudio.exception.RequiredObjectIsNullException;
 import br.com.erudio.model.User;
 import br.com.erudio.repository.UserRepository;
@@ -39,7 +39,7 @@ public class AuthServices {
 	private UserRepository repository;
 	
 	@SuppressWarnings("rawtypes")
-	public ResponseEntity<TokenVO> signin(AccountCredentialsVO credentials) {
+	public ResponseEntity<TokenDTO> signin(AccountCredentialsDTO credentials) {
 		try {
 			// Realiza a autenticação com os dados fornecidos
 			authenticationManager.authenticate(
@@ -74,7 +74,7 @@ public class AuthServices {
 	public ResponseEntity refreshToken(String username, String refreshToken) {
 		var user = repository.findByUsername(username);
 		
-		var tokenResponse = new TokenVO();
+		var tokenResponse = new TokenDTO();
 		if (user != null) {
 			tokenResponse = tokenProvider.refreshToken(refreshToken);
 		} else {
@@ -83,7 +83,7 @@ public class AuthServices {
 		return ResponseEntity.ok(tokenResponse);
 	}
 
-	public AccountCredentialsVO create(AccountCredentialsVO user) {
+	public AccountCredentialsDTO create(AccountCredentialsDTO user) {
 		if (user == null) throw new RequiredObjectIsNullException();
 
 		logger.info("Creating one new User!");
@@ -95,7 +95,7 @@ public class AuthServices {
 		entity.setAccountNonLocked(true);
 		entity.setCredentialsNonExpired(true);
 		entity.setEnabled(true);
-		return parseObject(repository.save(entity), AccountCredentialsVO.class);
+		return parseObject(repository.save(entity), AccountCredentialsDTO.class);
 	}
 
 	private String generateHashedPassword(String password) {

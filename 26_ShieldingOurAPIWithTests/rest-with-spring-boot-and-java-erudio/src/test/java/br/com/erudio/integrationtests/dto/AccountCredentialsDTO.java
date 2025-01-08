@@ -1,9 +1,11 @@
-package br.com.erudio.data.dto.security;
+package br.com.erudio.integrationtests.dto;
 
 import java.io.Serializable;
 import java.util.Objects;
+import jakarta.xml.bind.annotation.XmlRootElement;
 
-public class AccountCredentialsVO implements Serializable{
+//@XmlRootElement
+public class AccountCredentialsDTO implements Serializable{
 
 	private static final long serialVersionUID = 1L;
 	
@@ -11,14 +13,14 @@ public class AccountCredentialsVO implements Serializable{
 	private String password;
 	private String fullName;
 
-	public AccountCredentialsVO(){}
+	public AccountCredentialsDTO(){}
 
-	public AccountCredentialsVO(String username, String password) {
+	public AccountCredentialsDTO(String username, String password) {
 		this.username = username;
 		this.password = password;
 	}
 
-	public AccountCredentialsVO(String username, String password, String fullName) {
+	public AccountCredentialsDTO(String username, String password, String fullName) {
 		this.username = username;
 		this.password = password;
 		this.fullName = fullName;
@@ -51,7 +53,7 @@ public class AccountCredentialsVO implements Serializable{
 	@Override
 	public boolean equals(Object o) {
 		if (o == null || getClass() != o.getClass()) return false;
-		AccountCredentialsVO that = (AccountCredentialsVO) o;
+		AccountCredentialsDTO that = (AccountCredentialsDTO) o;
 		return Objects.equals(getUsername(), that.getUsername()) && Objects.equals(getPassword(), that.getPassword()) && Objects.equals(getFullName(), that.getFullName());
 	}
 

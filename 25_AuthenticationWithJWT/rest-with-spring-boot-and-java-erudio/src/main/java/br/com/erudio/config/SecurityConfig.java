@@ -31,26 +31,14 @@ public class SecurityConfig {
 	
 	@Bean
 	PasswordEncoder passwordEncoder() {
-		// Criamos um mapa para armazenar diferentes implementações de PasswordEncoder
-		Map<String, PasswordEncoder> encoders = new HashMap<>();
-
-		// Configuramos um Pbkdf2PasswordEncoder, que usa o algoritmo PBKDF2 com HmacSHA256
-		// para gerar senhas seguras. Os parâmetros incluem:
-		// - Salt vazio (""), que será gerado automaticamente se não for especificado.
-		// - Comprimento da chave (8 bytes).
-		// - Iterações (185000), que é o número de vezes que o algoritmo será aplicado.
-		// - Algoritmo SecretKeyFactoryAlgorithm.PBKDF2WithHmacSHA256, que especifica o algoritmo de hash seguro.
 		Pbkdf2PasswordEncoder pbkdf2Encoder = new Pbkdf2PasswordEncoder("", 8, 185000,
 				SecretKeyFactoryAlgorithm.PBKDF2WithHmacSHA256);
 
-		// Adicionamos o Pbkdf2PasswordEncoder ao mapa de encoders com a chave "pbkdf2"
+		Map<String, PasswordEncoder> encoders = new HashMap<>();
 		encoders.put("pbkdf2", pbkdf2Encoder);
 
-		// Criamos um DelegatingPasswordEncoder, que delega a codificação para um dos encoders no mapa.
-		// O primeiro parâmetro ("pbkdf2") define o encoder padrão a ser usado.
 		DelegatingPasswordEncoder passwordEncoder = new DelegatingPasswordEncoder("pbkdf2", encoders);
 
-		// Configuramos o encoder padrão para correspondência, caso nenhuma outra estratégia seja identificada.
 		passwordEncoder.setDefaultPasswordEncoderForMatches(pbkdf2Encoder);
 		return passwordEncoder;
 	}

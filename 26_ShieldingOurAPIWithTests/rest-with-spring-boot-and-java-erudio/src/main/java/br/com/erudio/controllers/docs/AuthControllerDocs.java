@@ -1,6 +1,6 @@
 package br.com.erudio.controllers.docs;
 
-import br.com.erudio.data.dto.security.AccountCredentialsVO;
+import br.com.erudio.data.dto.security.AccountCredentialsDTO;
 import io.swagger.v3.oas.annotations.Operation;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -10,7 +10,7 @@ public interface AuthControllerDocs {
     @SuppressWarnings("rawtypes")
     @Operation(summary = "Authenticates a user and returns a token")
     @PostMapping(value = "/signin")
-    ResponseEntity signin(@RequestBody AccountCredentialsVO credentials);
+    ResponseEntity signin(@RequestBody AccountCredentialsDTO credentials);
 
     @SuppressWarnings("rawtypes")
     @Operation(summary = "Refresh token for authenticated user and returns a token")
@@ -28,5 +28,5 @@ public interface AuthControllerDocs {
                     MediaType.APPLICATION_XML_VALUE,
                     MediaType.APPLICATION_YAML_VALUE}
     )
-    AccountCredentialsVO create(@RequestBody AccountCredentialsVO user);
+    AccountCredentialsDTO create(@RequestBody AccountCredentialsDTO user);
 }
