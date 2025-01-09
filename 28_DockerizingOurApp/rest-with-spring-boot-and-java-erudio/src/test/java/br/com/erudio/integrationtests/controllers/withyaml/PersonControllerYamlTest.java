@@ -1,26 +1,26 @@
-package br.com.erudio.integrationtests.controllers.withxml;
+package br.com.erudio.integrationtests.controllers.withyaml;
 
 import br.com.erudio.config.TestConfigs;
+import br.com.erudio.integrationtests.controllers.withyaml.mapper.YAMLMapper;
 import br.com.erudio.integrationtests.dto.AccountCredentialsDTO;
 import br.com.erudio.integrationtests.dto.PersonDTO;
 import br.com.erudio.integrationtests.dto.TokenDTO;
 import br.com.erudio.integrationtests.dto.wrappers.xmlandyaml.PagedModelPerson;
 import br.com.erudio.integrationtests.testcontainers.AbstractIntegrationTest;
 import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.DeserializationFeature;
-import com.fasterxml.jackson.databind.module.SimpleModule;
-import com.fasterxml.jackson.dataformat.xml.XmlMapper;
 import io.restassured.builder.RequestSpecBuilder;
+import io.restassured.config.EncoderConfig;
+import io.restassured.config.RestAssuredConfig;
 import io.restassured.filter.log.LogDetail;
 import io.restassured.filter.log.RequestLoggingFilter;
 import io.restassured.filter.log.ResponseLoggingFilter;
-import io.restassured.path.xml.XmlPath;
+import io.restassured.http.ContentType;
 import io.restassured.response.Response;
 import io.restassured.specification.RequestSpecification;
 import org.junit.jupiter.api.*;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.hateoas.Link;
 import org.springframework.http.MediaType;
+import org.yaml.snakeyaml.Yaml;
 
 import java.util.List;
 import java.util.Map;
@@ -29,48 +29,50 @@ import static io.restassured.RestAssured.given;
 import static junit.framework.TestCase.assertTrue;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.*;
-import static org.hamcrest.Matchers.is;
 import static org.junit.jupiter.api.Assertions.*;
+
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.DEFINED_PORT)
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
-class PersonControllerXmlTest extends AbstractIntegrationTest {
+class PersonControllerYamlTest extends AbstractIntegrationTest {
 
     private static RequestSpecification specification;
-    private static XmlMapper objectMapper;
+    private static YAMLMapper objectMapper;
 
     private static PersonDTO person;
 
     @BeforeAll
     static void setUp() {
-        objectMapper = new XmlMapper();
-        objectMapper.disable(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES);
-
+        objectMapper = new YAMLMapper();
         person = new PersonDTO();
     }
 
     @Test
     @Order(0)
-    public void authorization() {
+    void authorization() {
         AccountCredentialsDTO user = new AccountCredentialsDTO("leandro", "admin123");
 
         var accessToken = given()
+                .config(RestAssuredConfig.config()
+                        .encoderConfig(EncoderConfig.encoderConfig()
+                                .encodeContentTypeAs(MediaType.APPLICATION_YAML_VALUE, ContentType.TEXT)))
                 .basePath("/auth/signin")
                 .port(TestConfigs.SERVER_PORT)
-                .contentType(MediaType.APPLICATION_XML_VALUE)
-                .accept(MediaType.APPLICATION_XML_VALUE)
-                .body(user)
+                .contentType(MediaType.APPLICATION_YAML_VALUE)
+                .accept(MediaType.APPLICATION_YAML_VALUE)
+                .body(user, objectMapper)
                 .when()
                 .post()
                 .then()
                 .statusCode(200)
-                .contentType(MediaType.APPLICATION_XML_VALUE)
+                .contentType(MediaType.APPLICATION_YAML_VALUE)
                 .extract()
                 .body()
-                .as(TokenDTO.class)
+                .as(TokenDTO.class, objectMapper)
                 .getAccessToken();
 
         specification = new RequestSpecBuilder()
                 .addHeader(TestConfigs.HEADER_PARAM_AUTHORIZATION, "Bearer " + accessToken)
+                .addHeader(TestConfigs.HEADER_PARAM_ORIGIN, TestConfigs.ORIGIN_ERUDIO)
                 .setBasePath("/api/person/v1")
                 .setPort(TestConfigs.SERVER_PORT)
                 .addFilter(new RequestLoggingFilter(LogDetail.ALL))
@@ -83,20 +85,26 @@ class PersonControllerXmlTest extends AbstractIntegrationTest {
     void createTest() throws JsonProcessingException {
         mockPerson();
 
-        var content = given(specification)
-            .contentType(MediaType.APPLICATION_XML_VALUE)
-            .accept(MediaType.APPLICATION_XML_VALUE)
-                .body(person)
+
+
+        var createdPerson = given().config(
+                RestAssuredConfig.config()
+                    .encoderConfig(
+                        EncoderConfig.encoderConfig().
+                            encodeContentTypeAs(MediaType.APPLICATION_YAML_VALUE, ContentType.TEXT))
+                ).spec(specification)
+            .contentType(MediaType.APPLICATION_YAML_VALUE)
+            .accept(MediaType.APPLICATION_YAML_VALUE)
+                .body(person, objectMapper)
             .when()
                 .post()
             .then()
                 .statusCode(200)
-                .contentType(MediaType.APPLICATION_XML_VALUE)
+                .contentType(MediaType.APPLICATION_YAML_VALUE)
             .extract()
                 .body()
-                    .asString();
+                    .as(PersonDTO.class, objectMapper);
 
-        PersonDTO createdPerson = objectMapper.readValue(content, PersonDTO.class);
         person = createdPerson;
 
         assertNotNull(createdPerson.getId());
@@ -115,20 +123,24 @@ class PersonControllerXmlTest extends AbstractIntegrationTest {
     void updateTest() throws JsonProcessingException {
         person.setLastName("Benedict Torvalds");
 
-        var content = given(specification)
-            .contentType(MediaType.APPLICATION_XML_VALUE)
-            .accept(MediaType.APPLICATION_XML_VALUE)
-                .body(person)
+        var createdPerson = given().config(
+                        RestAssuredConfig.config()
+                                .encoderConfig(
+                                        EncoderConfig.encoderConfig().
+                                                encodeContentTypeAs(MediaType.APPLICATION_YAML_VALUE, ContentType.TEXT))
+                ).spec(specification)
+            .contentType(MediaType.APPLICATION_YAML_VALUE)
+            .accept(MediaType.APPLICATION_YAML_VALUE)
+                .body(person, objectMapper)
             .when()
                 .put()
             .then()
                 .statusCode(200)
-                .contentType(MediaType.APPLICATION_XML_VALUE)
+                .contentType(MediaType.APPLICATION_YAML_VALUE)
             .extract()
                 .body()
-                    .asString();
+                .as(PersonDTO.class, objectMapper);
 
-        PersonDTO createdPerson = objectMapper.readValue(content, PersonDTO.class);
         person = createdPerson;
 
         assertNotNull(createdPerson.getId());
@@ -146,20 +158,24 @@ class PersonControllerXmlTest extends AbstractIntegrationTest {
     @Order(3)
     void findByIdTest() throws JsonProcessingException {
 
-        var content = given(specification)
-                .contentType(MediaType.APPLICATION_XML_VALUE)
-                .accept(MediaType.APPLICATION_XML_VALUE)
+        var createdPerson = given().config(
+                        RestAssuredConfig.config()
+                                .encoderConfig(
+                                        EncoderConfig.encoderConfig().
+                                                encodeContentTypeAs(MediaType.APPLICATION_YAML_VALUE, ContentType.TEXT))
+                ).spec(specification)
+                .contentType(MediaType.APPLICATION_YAML_VALUE)
+                .accept(MediaType.APPLICATION_YAML_VALUE)
                     .pathParam("id", person.getId())
                 .when()
                     .get("{id}")
                 .then()
                     .statusCode(200)
-                    .contentType(MediaType.APPLICATION_XML_VALUE)
+                    .contentType(MediaType.APPLICATION_YAML_VALUE)
                 .extract()
                     .body()
-                        .asString();
+                .as(PersonDTO.class, objectMapper);
 
-        PersonDTO createdPerson = objectMapper.readValue(content, PersonDTO.class);
         person = createdPerson;
 
         assertNotNull(createdPerson.getId());
@@ -176,19 +192,23 @@ class PersonControllerXmlTest extends AbstractIntegrationTest {
     @Order(4)
     void disableTest() throws JsonProcessingException {
 
-        var content = given(specification)
-                .accept(MediaType.APPLICATION_XML_VALUE)
+        var createdPerson = given().config(
+                        RestAssuredConfig.config()
+                                .encoderConfig(
+                                        EncoderConfig.encoderConfig().
+                                                encodeContentTypeAs(MediaType.APPLICATION_YAML_VALUE, ContentType.TEXT))
+                ).spec(specification)
+                .accept(MediaType.APPLICATION_YAML_VALUE)
                     .pathParam("id", person.getId())
                 .when()
                     .patch("{id}")
                 .then()
                     .statusCode(200)
-                    .contentType(MediaType.APPLICATION_XML_VALUE)
+                    .contentType(MediaType.APPLICATION_YAML_VALUE)
                 .extract()
                     .body()
-                        .asString();
+                .as(PersonDTO.class, objectMapper);
 
-        PersonDTO createdPerson = objectMapper.readValue(content, PersonDTO.class);
         person = createdPerson;
 
         assertNotNull(createdPerson.getId());
@@ -218,20 +238,19 @@ class PersonControllerXmlTest extends AbstractIntegrationTest {
     @Order(6)
     void findAllTest() throws JsonProcessingException {
 
-        var content = given(specification)
-                .accept(MediaType.APPLICATION_XML_VALUE)
+        var response = given(specification)
+                .accept(MediaType.APPLICATION_YAML_VALUE)
                 .queryParams("page", 3, "size", 12, "direction", "asc")
                 .when()
                 .get()
                 .then()
                 .statusCode(200)
-                .contentType(MediaType.APPLICATION_XML_VALUE)
+                .contentType(MediaType.APPLICATION_YAML_VALUE)
                 .extract()
                 .body()
-                .asString();
+                .as(PagedModelPerson.class, objectMapper);
 
-        PagedModelPerson wrapper = objectMapper.readValue(content, PagedModelPerson.class);
-        List<PersonDTO> people = wrapper.getContent();
+        List<PersonDTO> people = response.getContent();
 
         PersonDTO personOne = people.get(0);
 
@@ -258,79 +277,79 @@ class PersonControllerXmlTest extends AbstractIntegrationTest {
 
     @Test
     @Order(7)
-    void hateoasTest() {
+    void hateoasTest() throws JsonProcessingException {
 
         Response response = given(specification)
-                .accept(MediaType.APPLICATION_XML_VALUE)
+                .accept(MediaType.APPLICATION_YAML_VALUE)
                 .queryParams("page", 6 , "size", 10, "direction", "asc")
                 .when()
                 .get()
                 .then()
                 .statusCode(200)
-                .contentType(MediaType.APPLICATION_XML_VALUE)
+                .contentType(MediaType.APPLICATION_YAML_VALUE)
                 .extract()
                 .response();
 
-        // Obtém o corpo da resposta como uma string XML
-        String xml = response.getBody().asString();
+        // Obt�m o corpo da resposta como uma string YAML
+        String yaml = response.getBody().asString();
 
-        // Usa XmlPath para fazer as validaçõs no XML
-        XmlPath xmlPath = new XmlPath(xml);
+        // Usa SnakeYAML para processar o YAML
+        Yaml yamlParser = new Yaml();
+        Map<String, Object> parsedYaml = yamlParser.load(yaml);
 
-        // Tenta obter a lista de links como uma lista de strings, não mapas
-        List<String> peopleLinks = xmlPath.getList("PagedModel.content.content.links.href");
+        // Valida os conte�dos
+        List<Map<String, Object>> content = (List<Map<String, Object>>) parsedYaml.get("content");
+        for (Map<String, Object> person : content) {
+            List<Map<String, String>> links = (List<Map<String, String>>) person.get("links");
+            for (Map<String, String> link : links) {
+                // Verifica se o link tem os atributos esperados
+                assertThat("HATEOAS link rel is missing", link, hasKey("rel"));
+                assertThat("HATEOAS link href is missing", link, hasKey("href"));
+                assertThat("HATEOAS link type is missing", link, hasKey("type"));
 
-        // Percorre cada link e faz as validaçõs
-        for (String link : peopleLinks) {
-            // Verifica se a URL está no formato correto
-            assertThat("HATEOAS link has an invalid URL", link, matchesPattern("https?://.+/api/person/v1.*"));
-            // Certifica-se de que a URL não é nula
-            assertThat("HATEOAS link has a null URL", link, notNullValue());
+                // Valida o formato do link
+                assertThat("HATEOAS link has an invalid URL", link.get("href"), matchesPattern("https?://.+/api/person/v1.*"));
+            }
         }
 
-        // Valida os links de navegaçã da página
-        List<String> pageLinks = xmlPath.getList("PagedModel.links.href");
+        // Valida os atributos de pagina��o
+        Map<String, Object> page = (Map<String, Object>) parsedYaml.get("page");
+        assertThat("Page number is incorrect", page.get("number"), is(6));
+        assertThat("Page size is incorrect", page.get("size"), is(10));
 
-        for (String pageLink : pageLinks) {
-            // Verifica se os links de navegaçã estão no formato correto
-            assertThat("Page link has an invalid URL", pageLink, matchesPattern("https?://.+/api/person/v1.*"));
-            assertThat("Page link has a null URL", pageLink, notNullValue());
+        // Valida os totais de elementos e p�ginas
+        Integer totalElements = Integer.parseInt(page.get("totalElements").toString());
+        Integer totalPages = Integer.parseInt(page.get("totalPages").toString());
+
+        assertThat("Total elements is missing or invalid", totalElements, is(greaterThan(0)));
+        assertThat("Total pages is missing or invalid", totalPages, is(greaterThan(0)));
+
+        // Valida os links de navega��o da p�gina
+        List<Map<String, String>> pageLinks = (List<Map<String, String>>) parsedYaml.get("links");
+        for (Map<String, String> pageLink : pageLinks) {
+            assertThat("Page link href is missing", pageLink, hasKey("href"));
+            assertThat("Page link has an invalid URL", pageLink.get("href"), matchesPattern("https?://.+/api/person/v1.*"));
         }
-
-        // Valida os atributos relacionados à paginação no XML
-        // Corrigido: Usa get() para acessar os atributos diretamente como string
-        String size = xmlPath.getString("PagedModel.page.size");
-        String number = xmlPath.getString("PagedModel.page.number");
-        String totalElements = xmlPath.getString("PagedModel.page.totalElements");
-        String totalPages = xmlPath.getString("PagedModel.page.totalPages");
-
-        assertThat(size, is("10")); // Verifica o tamanho da página (10 itens)
-        assertThat(number, is("6")); // Verifica o número da página atual (6)
-
-        // Verifica se os atributos 'totalElements' e 'totalPages' são maiores que zero
-        Assertions.assertTrue(Integer.parseInt(totalElements) > 0, "totalElements deve ser maior que 0");
-        Assertions.assertTrue(Integer.parseInt(totalPages) > 0, "totalPages deve ser maior que 0");
     }
-    
+
     @Test
     @Order(8)
     void findByNameTestTest() throws JsonProcessingException {
 
-        var content = given(specification)
-                .accept(MediaType.APPLICATION_XML_VALUE)
+        var response = given(specification)
+                .accept(MediaType.APPLICATION_YAML_VALUE)
                 .pathParam("firstName", "and")
                 .queryParams("page", 0, "size", 12, "direction", "asc")
                 .when()
                 .get("findPeopleByName/{firstName}")
                 .then()
                 .statusCode(200)
-                .contentType(MediaType.APPLICATION_XML_VALUE)
+                .contentType(MediaType.APPLICATION_YAML_VALUE)
                 .extract()
                 .body()
-                .asString();
+                .as(PagedModelPerson.class, objectMapper);
 
-        PagedModelPerson wrapper = objectMapper.readValue(content, PagedModelPerson.class);
-        List<PersonDTO> people = wrapper.getContent();
+        List<PersonDTO> people = response.getContent();
 
         PersonDTO personOne = people.get(0);
 

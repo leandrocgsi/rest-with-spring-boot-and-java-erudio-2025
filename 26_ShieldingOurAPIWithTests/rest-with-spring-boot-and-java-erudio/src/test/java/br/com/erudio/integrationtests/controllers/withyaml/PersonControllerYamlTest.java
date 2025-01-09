@@ -15,15 +15,20 @@ import io.restassured.filter.log.LogDetail;
 import io.restassured.filter.log.RequestLoggingFilter;
 import io.restassured.filter.log.ResponseLoggingFilter;
 import io.restassured.http.ContentType;
+import io.restassured.response.Response;
 import io.restassured.specification.RequestSpecification;
 import org.junit.jupiter.api.*;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
+import org.yaml.snakeyaml.Yaml;
 
 import java.util.List;
+import java.util.Map;
 
 import static io.restassured.RestAssured.given;
 import static junit.framework.TestCase.assertTrue;
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.*;
 import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.DEFINED_PORT)
@@ -272,6 +277,63 @@ class PersonControllerYamlTest extends AbstractIntegrationTest {
 
     @Test
     @Order(7)
+    void hateoasTest() throws JsonProcessingException {
+
+        Response response = given(specification)
+                .accept(MediaType.APPLICATION_YAML_VALUE)
+                .queryParams("page", 6 , "size", 10, "direction", "asc")
+                .when()
+                .get()
+                .then()
+                .statusCode(200)
+                .contentType(MediaType.APPLICATION_YAML_VALUE)
+                .extract()
+                .response();
+
+        // Obtém o corpo da resposta como uma string YAML
+        String yaml = response.getBody().asString();
+
+        // Usa SnakeYAML para processar o YAML
+        Yaml yamlParser = new Yaml();
+        Map<String, Object> parsedYaml = yamlParser.load(yaml);
+
+        // Valida os conteúdos
+        List<Map<String, Object>> content = (List<Map<String, Object>>) parsedYaml.get("content");
+        for (Map<String, Object> person : content) {
+            List<Map<String, String>> links = (List<Map<String, String>>) person.get("links");
+            for (Map<String, String> link : links) {
+                // Verifica se o link tem os atributos esperados
+                assertThat("HATEOAS link rel is missing", link, hasKey("rel"));
+                assertThat("HATEOAS link href is missing", link, hasKey("href"));
+                assertThat("HATEOAS link type is missing", link, hasKey("type"));
+
+                // Valida o formato do link
+                assertThat("HATEOAS link has an invalid URL", link.get("href"), matchesPattern("https?://.+/api/person/v1.*"));
+            }
+        }
+
+        // Valida os atributos de paginação
+        Map<String, Object> page = (Map<String, Object>) parsedYaml.get("page");
+        assertThat("Page number is incorrect", page.get("number"), is(6));
+        assertThat("Page size is incorrect", page.get("size"), is(10));
+
+        // Valida os totais de elementos e páginas
+        Integer totalElements = Integer.parseInt(page.get("totalElements").toString());
+        Integer totalPages = Integer.parseInt(page.get("totalPages").toString());
+
+        assertThat("Total elements is missing or invalid", totalElements, is(greaterThan(0)));
+        assertThat("Total pages is missing or invalid", totalPages, is(greaterThan(0)));
+
+        // Valida os links de navegação da página
+        List<Map<String, String>> pageLinks = (List<Map<String, String>>) parsedYaml.get("links");
+        for (Map<String, String> pageLink : pageLinks) {
+            assertThat("Page link href is missing", pageLink, hasKey("href"));
+            assertThat("Page link has an invalid URL", pageLink.get("href"), matchesPattern("https?://.+/api/person/v1.*"));
+        }
+    }
+
+    @Test
+    @Order(8)
     void findByNameTestTest() throws JsonProcessingException {
 
         var response = given(specification)
