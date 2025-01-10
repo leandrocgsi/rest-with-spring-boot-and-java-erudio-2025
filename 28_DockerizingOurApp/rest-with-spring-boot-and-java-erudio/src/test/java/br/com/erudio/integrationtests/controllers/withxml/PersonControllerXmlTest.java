@@ -271,43 +271,43 @@ class PersonControllerXmlTest extends AbstractIntegrationTest {
                 .extract()
                 .response();
 
-        // Obt�m o corpo da resposta como uma string XML
+        // Obtém o corpo da resposta como uma string XML
         String xml = response.getBody().asString();
 
-        // Usa XmlPath para fazer as valida��es no XML
+        // Usa XmlPath para fazer as validaçõs no XML
         XmlPath xmlPath = new XmlPath(xml);
 
-        // Tenta obter a lista de links como uma lista de strings, n�o mapas
+        // Tenta obter a lista de links como uma lista de strings, não mapas
         List<String> peopleLinks = xmlPath.getList("PagedModel.content.content.links.href");
 
-        // Percorre cada link e faz as valida��es
+        // Percorre cada link e faz as validaçõs
         for (String link : peopleLinks) {
-            // Verifica se a URL est� no formato correto
+            // Verifica se a URL está no formato correto
             assertThat("HATEOAS link has an invalid URL", link, matchesPattern("https?://.+/api/person/v1.*"));
-            // Certifica-se de que a URL n�o � nula
+            // Certifica-se de que a URL não é nula
             assertThat("HATEOAS link has a null URL", link, notNullValue());
         }
 
-        // Valida os links de navega��o da p�gina
+        // Valida os links de navegação da página
         List<String> pageLinks = xmlPath.getList("PagedModel.links.href");
 
         for (String pageLink : pageLinks) {
-            // Verifica se os links de navega��o est�o no formato correto
+            // Verifica se os links de navegação estão no formato correto
             assertThat("Page link has an invalid URL", pageLink, matchesPattern("https?://.+/api/person/v1.*"));
             assertThat("Page link has a null URL", pageLink, notNullValue());
         }
 
-        // Valida os atributos relacionados � pagina��o no XML
+        // Valida os atributos relacionados à paginação no XML
         // Corrigido: Usa get() para acessar os atributos diretamente como string
         String size = xmlPath.getString("PagedModel.page.size");
         String number = xmlPath.getString("PagedModel.page.number");
         String totalElements = xmlPath.getString("PagedModel.page.totalElements");
         String totalPages = xmlPath.getString("PagedModel.page.totalPages");
 
-        assertThat(size, is("10")); // Verifica o tamanho da p�gina (10 itens)
-        assertThat(number, is("6")); // Verifica o n�mero da p�gina atual (6)
+        assertThat(size, is("10")); // Verifica o tamanho da página (10 itens)
+        assertThat(number, is("6")); // Verifica o número da página atual (6)
 
-        // Verifica se os atributos 'totalElements' e 'totalPages' s�o maiores que zero
+        // Verifica se os atributos 'totalElements' e 'totalPages' são maiores que zero
         Assertions.assertTrue(Integer.parseInt(totalElements) > 0, "totalElements deve ser maior que 0");
         Assertions.assertTrue(Integer.parseInt(totalPages) > 0, "totalPages deve ser maior que 0");
     }

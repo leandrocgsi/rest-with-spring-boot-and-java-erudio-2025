@@ -290,14 +290,14 @@ class PersonControllerYamlTest extends AbstractIntegrationTest {
                 .extract()
                 .response();
 
-        // Obt�m o corpo da resposta como uma string YAML
+        // Obtém o corpo da resposta como uma string YAML
         String yaml = response.getBody().asString();
 
         // Usa SnakeYAML para processar o YAML
         Yaml yamlParser = new Yaml();
         Map<String, Object> parsedYaml = yamlParser.load(yaml);
 
-        // Valida os conte�dos
+        // Valida os conteúdos
         List<Map<String, Object>> content = (List<Map<String, Object>>) parsedYaml.get("content");
         for (Map<String, Object> person : content) {
             List<Map<String, String>> links = (List<Map<String, String>>) person.get("links");
@@ -312,19 +312,19 @@ class PersonControllerYamlTest extends AbstractIntegrationTest {
             }
         }
 
-        // Valida os atributos de pagina��o
+        // Valida os atributos de paginação
         Map<String, Object> page = (Map<String, Object>) parsedYaml.get("page");
         assertThat("Page number is incorrect", page.get("number"), is(6));
         assertThat("Page size is incorrect", page.get("size"), is(10));
 
-        // Valida os totais de elementos e p�ginas
+        // Valida os totais de elementos e páginas
         Integer totalElements = Integer.parseInt(page.get("totalElements").toString());
         Integer totalPages = Integer.parseInt(page.get("totalPages").toString());
 
         assertThat("Total elements is missing or invalid", totalElements, is(greaterThan(0)));
         assertThat("Total pages is missing or invalid", totalPages, is(greaterThan(0)));
 
-        // Valida os links de navega��o da p�gina
+        // Valida os links de navegação da página
         List<Map<String, String>> pageLinks = (List<Map<String, String>>) parsedYaml.get("links");
         for (Map<String, String> pageLink : pageLinks) {
             assertThat("Page link href is missing", pageLink, hasKey("href"));
