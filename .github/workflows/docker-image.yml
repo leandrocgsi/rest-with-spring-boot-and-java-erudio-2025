@@ -1,4 +1,4 @@
-name: Continuous Delivery with Github Actions
+name: Continuous Integration and Delivery with Github Actions
 
 on:
   push:
