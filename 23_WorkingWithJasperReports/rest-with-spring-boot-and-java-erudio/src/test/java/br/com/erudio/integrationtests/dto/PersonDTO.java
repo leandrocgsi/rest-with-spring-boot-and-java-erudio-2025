@@ -1,7 +1,6 @@
 package br.com.erudio.integrationtests.dto;
 
 import br.com.erudio.model.Book;
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.xml.bind.annotation.XmlRootElement;
 
 import java.io.Serializable;
@@ -22,7 +21,6 @@ public class PersonDTO implements Serializable {
 
     private String profileUrl;
     private String photoUrl;
-
     private List<Book> books;
 
     public PersonDTO() {}
@@ -75,8 +73,6 @@ public class PersonDTO implements Serializable {
         this.enabled = enabled;
     }
 
-
-
     public String getProfileUrl() {
         return profileUrl;
     }
@@ -101,21 +97,15 @@ public class PersonDTO implements Serializable {
         this.books = books;
     }
 
-    public String getName(){
-        return (firstName != null ? firstName : "") +
-                (lastName != null ? " " + lastName : "");
-    }
-
     @Override
     public boolean equals(Object o) {
         if (o == null || getClass() != o.getClass()) return false;
-        if (!super.equals(o)) return false;
         PersonDTO personDTO = (PersonDTO) o;
         return Objects.equals(getId(), personDTO.getId()) && Objects.equals(getFirstName(), personDTO.getFirstName()) && Objects.equals(getLastName(), personDTO.getLastName()) && Objects.equals(getAddress(), personDTO.getAddress()) && Objects.equals(getGender(), personDTO.getGender()) && Objects.equals(getEnabled(), personDTO.getEnabled()) && Objects.equals(getProfileUrl(), personDTO.getProfileUrl()) && Objects.equals(getPhotoUrl(), personDTO.getPhotoUrl()) && Objects.equals(getBooks(), personDTO.getBooks());
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(super.hashCode(), getId(), getFirstName(), getLastName(), getAddress(), getGender(), getEnabled(), getProfileUrl(), getPhotoUrl(), getBooks());
+        return Objects.hash(getId(), getFirstName(), getLastName(), getAddress(), getGender(), getEnabled(), getProfileUrl(), getPhotoUrl(), getBooks());
     }
 }

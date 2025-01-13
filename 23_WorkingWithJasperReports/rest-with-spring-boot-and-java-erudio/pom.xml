@@ -22,7 +22,6 @@
 		<commons-csv.version>1.12.0</commons-csv.version>
 		<jasperreports.version>7.0.1</jasperreports.version>
 		<zxing.version>3.5.3</zxing.version>
-		<barcode4j.version>2.1</barcode4j.version>
 	</properties>
 	<dependencies>
 
@@ -86,6 +85,7 @@
 			<artifactId>javase</artifactId>
 			<version>${zxing.version}</version>
 		</dependency>
+
 		<dependency>
 			<groupId>com.mysql</groupId>
 			<artifactId>mysql-connector-j</artifactId>

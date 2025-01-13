@@ -113,17 +113,17 @@ public class PersonController implements PersonControllerDocs {
     }
 
     @GetMapping(value = "/export/{id}",
-            produces = {
-                    MediaTypes.APPLICATION_PDF_VALUE}
+        produces = {
+            MediaType.APPLICATION_PDF_VALUE}
     )
     @Override
     public ResponseEntity<Resource> export(@PathVariable("id") Long id, HttpServletRequest request) {
-        String acceptHeader = request.getHeader(HttpHeaders.ACCEPT);
 
+        String acceptHeader = request.getHeader(HttpHeaders.ACCEPT);
         Resource file = service.exportPerson(id, acceptHeader);
 
         return ResponseEntity.ok()
-                .contentType(MediaType.parseMediaType(MediaTypes.APPLICATION_PDF_VALUE))
+                .contentType(MediaType.parseMediaType(acceptHeader))
                 .header(
                         HttpHeaders.CONTENT_DISPOSITION,
                         "attachment; filename=person.pdf")

@@ -1,7 +1,6 @@
 package br.com.erudio.model;
 
 import jakarta.persistence.*;
-import org.hibernate.annotations.BatchSize;
 
 import java.io.Serializable;
 import java.util.List;
@@ -40,11 +39,10 @@ public class Person implements Serializable {
 
     @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(
-            name = "person_books", // Nome da join table
-            joinColumns = @JoinColumn(name = "person_id"), // Coluna que referencia Person
-            inverseJoinColumns = @JoinColumn(name = "book_id") // Coluna que referencia Book
+         name = "person_books",
+         joinColumns = @JoinColumn(name = "person_id"),
+         inverseJoinColumns = @JoinColumn(name = "book_id")
     )
-    //@BatchSize(size = 20)
     private List<Book> books;
 
     public Person() {}

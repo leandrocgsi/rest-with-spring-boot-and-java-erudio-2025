@@ -24,7 +24,7 @@ public class PersonDTO extends RepresentationModel<PersonDTO> implements Seriali
     private String profileUrl;
     private String photoUrl;
 
-    @JsonIgnore // Ignora `books` ao serializar para JSON
+    @JsonIgnore
     private List<Book> books;
 
     public PersonDTO() {}
@@ -77,6 +77,12 @@ public class PersonDTO extends RepresentationModel<PersonDTO> implements Seriali
         this.enabled = enabled;
     }
 
+    @JsonIgnore
+    public String getName(){
+        return (firstName != null ? firstName : "") +
+            (lastName != null ? " " + lastName : "");
+    }
+
     public String getProfileUrl() {
         return profileUrl;
     }
@@ -99,12 +105,6 @@ public class PersonDTO extends RepresentationModel<PersonDTO> implements Seriali
 
     public void setBooks(List<Book> books) {
         this.books = books;
-    }
-
-    @JsonIgnore
-    public String getName(){
-        return (firstName != null ? firstName : "") +
-            (lastName != null ? " " + lastName : "");
     }
 
     @Override
