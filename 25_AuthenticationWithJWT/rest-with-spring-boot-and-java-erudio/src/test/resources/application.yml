@@ -2,13 +2,13 @@ server:
   port: 8888
 cors:
   originPatterns: http://localhost:8080,http://localhost:3000,https://www.erudio.com.br
+file:
+  upload-dir: /Code/UploadDir
 security:
   jwt:
     token:
       secret-key: 53cr37
-      expire-length: 3600000
-file:
-  upload-dir: /Code/UploadDir
+      expire-lenght: 3600000
 email:
   subject: "Default Subject"
   message: "Default Message"

@@ -1,32 +1,51 @@
 package br.com.erudio.controllers.docs;
 
-import br.com.erudio.data.dto.security.AccountCredentialsVO;
+import br.com.erudio.data.dto.security.AccountCredentialsDTO;
 import io.swagger.v3.oas.annotations.Operation;
-import org.springframework.http.MediaType;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
 
 public interface AuthControllerDocs {
-    @SuppressWarnings("rawtypes")
-    @Operation(summary = "Authenticates a user and returns a token")
-    @PostMapping(value = "/signin")
-    ResponseEntity signin(@RequestBody AccountCredentialsVO credentials);
 
-    @SuppressWarnings("rawtypes")
-    @Operation(summary = "Refresh token for authenticated user and returns a token")
-    @PutMapping(value = "/refresh/{username}")
-    ResponseEntity refreshToken(@PathVariable("username") String username,
-                                @RequestHeader("Authorization") String refreshToken);
-
-    @PostMapping(value = "/createUser",
-            consumes = {
-                    MediaType.APPLICATION_JSON_VALUE,
-                    MediaType.APPLICATION_XML_VALUE,
-                    MediaType.APPLICATION_YAML_VALUE},
-            produces = {
-                    MediaType.APPLICATION_JSON_VALUE,
-                    MediaType.APPLICATION_XML_VALUE,
-                    MediaType.APPLICATION_YAML_VALUE}
+    @Operation(
+            summary = "Authenticates a user and returns a token",
+            description = "Validates user credentials and generates an access token for authentication.",
+            tags = {"Authentication"},
+            responses = {
+                    @ApiResponse(description = "Success", responseCode = "200", content = @Content),
+                    @ApiResponse(description = "Bad Request", responseCode = "400", content = @Content),
+                    @ApiResponse(description = "Unauthorized", responseCode = "401", content = @Content),
+                    @ApiResponse(description = "Internal Server Error", responseCode = "500", content = @Content)
+            }
     )
-    AccountCredentialsVO create(@RequestBody AccountCredentialsVO user);
+    ResponseEntity<?> signin(AccountCredentialsDTO credentials);
+
+    @Operation(
+            summary = "Refresh token for authenticated user and returns a token",
+            description = "Generates a new access token using the provided refresh token and username.",
+            tags = {"Authentication"},
+            responses = {
+                    @ApiResponse(description = "Success", responseCode = "200", content = @Content),
+                    @ApiResponse(description = "Bad Request", responseCode = "400", content = @Content),
+                    @ApiResponse(description = "Unauthorized", responseCode = "401", content = @Content),
+                    @ApiResponse(description = "Internal Server Error", responseCode = "500", content = @Content)
+            }
+    )
+    ResponseEntity<?> refreshToken(
+            String username,
+            String refreshToken);
+
+    @Operation(
+            summary = "Create a new User",
+            description = "Registers a new user in the system with the provided credentials.",
+            tags = {"User Management"},
+            responses = {
+                    @ApiResponse(description = "Created", responseCode = "201", content = @Content),
+                    @ApiResponse(description = "Bad Request", responseCode = "400", content = @Content),
+                    @ApiResponse(description = "Conflict", responseCode = "409", content = @Content),
+                    @ApiResponse(description = "Internal Server Error", responseCode = "500", content = @Content)
+            }
+    )
+    AccountCredentialsDTO create(AccountCredentialsDTO credentials);
 }
