@@ -161,6 +161,9 @@ public class PersonService {
         entity.setLastName(person.getLastName());
         entity.setAddress(person.getAddress());
         entity.setGender(person.getGender());
+        entity.setEnabled(person.getEnabled());
+        entity.setPhotoUrl(person.getPhotoUrl());
+        entity.setProfileUrl(person.getProfileUrl());
 
         var dto = parseObject(repository.save(entity), PersonDTO.class);
         addHateoasLinks(dto);

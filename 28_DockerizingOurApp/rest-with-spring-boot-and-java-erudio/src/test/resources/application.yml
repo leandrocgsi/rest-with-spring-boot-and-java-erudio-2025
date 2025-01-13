@@ -3,7 +3,7 @@ server:
 cors:
   originPatterns: http://localhost:8080,http://localhost:3000,https://www.erudio.com.br
 file:
-  upload-dir: ${java.io.tmpdir}/uploads
+  upload-dir: ${java.io.tmpdir}/UploadDir
 security:
   jwt:
     token:
