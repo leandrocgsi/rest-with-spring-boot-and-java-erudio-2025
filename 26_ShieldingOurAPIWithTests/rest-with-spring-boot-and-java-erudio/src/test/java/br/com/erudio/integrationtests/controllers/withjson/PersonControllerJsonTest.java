@@ -16,8 +16,6 @@ import io.restassured.filter.log.ResponseLoggingFilter;
 import io.restassured.response.Response;
 import io.restassured.specification.RequestSpecification;
 import org.junit.jupiter.api.*;
-import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.*;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
 
@@ -25,6 +23,10 @@ import java.util.List;
 import java.util.Map;
 
 import static io.restassured.RestAssured.given;
+import static junit.framework.TestCase.assertTrue;
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.*;
+import static org.junit.Assert.assertNotNull;
 import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.DEFINED_PORT)
@@ -35,6 +37,7 @@ class PersonControllerJsonTest extends AbstractIntegrationTest {
     private static ObjectMapper objectMapper;
 
     private static PersonDTO person;
+    private static TokenDTO tokenDto;
 
     @BeforeAll
     static void setUp() {
@@ -42,34 +45,40 @@ class PersonControllerJsonTest extends AbstractIntegrationTest {
         objectMapper.disable(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES);
 
         person = new PersonDTO();
+        tokenDto = new TokenDTO();
     }
 
     @Test
     @Order(0)
-    public void authorization() {
-        AccountCredentialsDTO user = new AccountCredentialsDTO("leandro", "admin123");
+    void signin() {
+        AccountCredentialsDTO credentials =
+                new AccountCredentialsDTO("leandro", "admin123");
 
-        var accessToken = given()
+        tokenDto = given()
                 .basePath("/auth/signin")
                 .port(TestConfigs.SERVER_PORT)
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
-                .body(user)
+                .body(credentials)
                 .when()
                 .post()
                 .then()
                 .statusCode(200)
                 .extract()
                 .body()
-                .as(TokenDTO.class)
-                .getAccessToken();
+                .as(TokenDTO.class);
+
 
         specification = new RequestSpecBuilder()
-                .addHeader(TestConfigs.HEADER_PARAM_AUTHORIZATION, "Bearer " + accessToken)
+                .addHeader(TestConfigs.HEADER_PARAM_ORIGIN, TestConfigs.ORIGIN_ERUDIO)
+                .addHeader(TestConfigs.HEADER_PARAM_AUTHORIZATION, "Bearer " + tokenDto.getAccessToken())
                 .setBasePath("/api/person/v1")
                 .setPort(TestConfigs.SERVER_PORT)
                 .addFilter(new RequestLoggingFilter(LogDetail.ALL))
                 .addFilter(new ResponseLoggingFilter(LogDetail.ALL))
                 .build();
+
+        assertNotNull(tokenDto.getAccessToken());
+        assertNotNull(tokenDto.getRefreshToken());
     }
 
     @Test
@@ -249,64 +258,6 @@ class PersonControllerJsonTest extends AbstractIntegrationTest {
 
     @Test
     @Order(7)
-    void hateoasTest() throws JsonProcessingException {
-
-        Response response = given(specification)
-                .accept(MediaType.APPLICATION_JSON_VALUE)
-                .queryParams("page", 6 , "size", 10, "direction", "asc")
-                .when()
-                .get()
-                .then()
-                .statusCode(200)
-                .contentType(MediaType.APPLICATION_JSON_VALUE)
-                .extract()
-                .response();// Extrai o objeto Response para validações adicionais
-
-        // Obtém o corpo da resposta como uma string JSON
-        String json = response.getBody().asString();
-
-        // Obtém a lista de pessoas a partir do JSON no campo `_embedded.people`
-        List<Map<String, Object>> people = response.jsonPath().getList("_embedded.people");
-
-        // Itera sobre cada pessoa na lista para validar os links HATEOAS
-        for (Map<String, Object> person : people) {
-            Map<String, Object> links = (Map<String, Object>) person.get("_links"); // Obtém os links de cada pessoa
-
-            // Verifica se os links HATEOAS esperados estão presentes
-            assertThat("HATEOAS link 'self' is missing", links, hasKey("self"));
-            assertThat("HATEOAS link 'findAll' is missing", links, hasKey("findAll"));
-            assertThat("HATEOAS link 'create' is missing", links, hasKey("create"));
-            assertThat("HATEOAS link 'update' is missing", links, hasKey("update"));
-            assertThat("HATEOAS link 'disable' is missing", links, hasKey("disable"));
-            assertThat("HATEOAS link 'delete' is missing", links, hasKey("delete"));
-
-            // Valida o formato das URLs e se o método HTTP associado está presente
-            links.forEach((key, value) -> {
-                String href = ((Map<String, String>) value).get("href"); // Obtém o link associado ao HATEOAS
-                assertThat("HATEOAS link '" + key + "' has an invalid URL", href, matchesPattern("https?://.+/api/person/v1.*"));
-                assertThat("HATEOAS link '" + key + "' has an invalid HTTP method", ((Map<String, String>) value).get("type"), notNullValue());
-            });
-        }
-
-        // Valida os links relacionados à navegação da página
-        Map<String, Object> pageLinks = response.jsonPath().getMap("_links");
-        assertThat("Page link 'first' is missing", pageLinks, hasKey("first")); // Link para a primeira página
-        assertThat("Page link 'self' is missing", pageLinks, hasKey("self")); // Link para a página atual
-        assertThat("Page link 'next' is missing", pageLinks, hasKey("next")); // Link para a próxima página
-        assertThat("Page link 'last' is missing", pageLinks, hasKey("last")); // Link para a última página
-
-        // Valida os atributos relacionados à paginação no JSON
-        Map<String, Object> pageAttributes = response.jsonPath().getMap("page");
-        assertThat(pageAttributes.get("size"), is(10)); // Verifica o tamanho da página (10 itens)
-        assertThat(pageAttributes.get("number"), is(6)); // Verifica o número da página atual (6)
-
-        // Verifica se os atributos `totalElements` e `totalPages` são maiores que zero
-        assertTrue((Integer) pageAttributes.get("totalElements") > 0, "totalElements deve ser maior que 0");
-        assertTrue((Integer) pageAttributes.get("totalPages") > 0, "totalPages deve ser maior que 0");
-    }
-
-    @Test
-    @Order(8)
     void findByNameTest() throws JsonProcessingException {
 
         // {{baseUrl}}/api/person/v1/findPeopleByName/and?page=0&size=12&direction=asc
@@ -349,13 +300,66 @@ class PersonControllerJsonTest extends AbstractIntegrationTest {
         assertTrue(personFour.getEnabled());
     }
 
+    @Test
+    @Order(8)
+    void hateoasAndHalTest() throws JsonProcessingException {
+
+        Response response = (Response) given(specification)
+                .accept(MediaType.APPLICATION_JSON_VALUE)
+                .queryParams("page", 3, "size", 12, "direction", "asc")
+                .when()
+                .get()
+                .then()
+                .statusCode(200)
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .extract()
+                .body();
+
+        String json = response.getBody().asString();
+        List<Map<String, Object>> people = response.jsonPath().getList("_embedded.people");
+
+        for (Map<String, Object> person : people) {
+            Map<String, Object> links = (Map<String, Object>) person.get("_links");
+
+            assertThat("HATEOAS/HAL link 'self' is missing", links, hasKey("self"));
+            assertThat("HATEOAS/HAL link 'findAll' is missing", links, hasKey("findAll"));
+            assertThat("HATEOAS/HAL link 'findByName' is missing", links, hasKey("findByName"));
+            assertThat("HATEOAS/HAL link 'create' is missing", links, hasKey("create"));
+            assertThat("HATEOAS/HAL link 'update' is missing", links, hasKey("update"));
+            assertThat("HATEOAS/HAL link 'delete' is missing", links, hasKey("delete"));
+            assertThat("HATEOAS/HAL link 'disable' is missing", links, hasKey("disable"));
+            assertThat("HATEOAS/HAL link 'massCreation' is missing", links, hasKey("massCreation"));
+            assertThat("HATEOAS/HAL link 'exportPage' is missing", links, hasKey("exportPage"));
+
+            links.forEach((key, value) -> {
+                String href = ((Map<String, String>) value).get("href");
+                assertThat("HATEOAS/HAL link " + key + " has an invalid URL", href, matchesPattern("https?://.+/api/person/v1.*"));
+                assertThat("HATEOAS/HAL link " + key + " has an invalid HTTP method", ((Map<String, String>) value).get("type"), notNullValue());
+            });
+
+            Map<String, Object> pageLinks = response.jsonPath().getMap("_links");
+            assertThat("Page link 'self' is missing", pageLinks, hasKey("self"));
+            assertThat("Page link 'first' is missing", pageLinks, hasKey("first"));
+            assertThat("Page link 'prev' is missing", pageLinks, hasKey("prev"));
+            assertThat("Page link 'next' is missing", pageLinks, hasKey("next"));
+            assertThat("Page link 'last' is missing", pageLinks, hasKey("last"));
+
+            Map<String, Object> pageAttributes = response.jsonPath().getMap("page");
+            assertThat(pageAttributes.get("size"), is(12));
+            assertThat(pageAttributes.get("number"), is(3));
+
+            assertTrue("totalElements should be greater than 0", (Integer) pageAttributes.get("totalElements") > 0);
+            assertTrue("totalPages should be greater than 0", (Integer) pageAttributes.get("totalPages") > 0);
+        }
+    }
+
     private void mockPerson() {
         person.setFirstName("Linus");
         person.setLastName("Torvalds");
         person.setAddress("Helsinki - Finland");
         person.setGender("Male");
-        person.setPhotoUrl("https://pub.erudio.com.br/meus-cursos");
-        person.setProfileUrl("https://pub.erudio.com.br/meus-cursos");
         person.setEnabled(true);
+        person.setProfileUrl("https://pub.erudio.com.br/meus-cursos");
+        person.setPhotoUrl("https://pub.erudio.com.br/meus-cursos");
     }
 }

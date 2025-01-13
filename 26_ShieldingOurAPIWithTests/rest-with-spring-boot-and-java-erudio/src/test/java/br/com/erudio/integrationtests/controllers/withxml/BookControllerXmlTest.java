@@ -22,6 +22,7 @@ import java.util.Date;
 
 import static io.restassured.RestAssured.given;
 import static junit.framework.TestCase.assertTrue;
+import static org.junit.Assert.assertNotNull;
 import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.DEFINED_PORT)
@@ -32,6 +33,7 @@ class BookControllerXmlTest extends AbstractIntegrationTest {
     private static XmlMapper objectMapper;
 
     private static BookDTO book;
+    private static TokenDTO tokenDto;
 
     @BeforeAll
     static void setUp() {
@@ -39,37 +41,45 @@ class BookControllerXmlTest extends AbstractIntegrationTest {
         objectMapper.disable(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES);
 
         book = new BookDTO();
+        tokenDto = new TokenDTO();
     }
 
     @Test
     @Order(0)
-    public void authorization() {
-        AccountCredentialsDTO user = new AccountCredentialsDTO("leandro", "admin123");
+    void signin() throws JsonProcessingException {
+        AccountCredentialsDTO credentials =
+                new AccountCredentialsDTO("leandro", "admin123");
 
-        var accessToken = given()
+        var content = given()
                 .basePath("/auth/signin")
                 .port(TestConfigs.SERVER_PORT)
                 .contentType(MediaType.APPLICATION_XML_VALUE)
                 .accept(MediaType.APPLICATION_XML_VALUE)
-                .body(user)
+                .body(credentials)
                 .when()
                 .post()
                 .then()
                 .statusCode(200)
-                .contentType(MediaType.APPLICATION_XML_VALUE)
                 .extract()
                 .body()
-                .as(TokenDTO.class)
-                .getAccessToken();
+                .asString();
+
+        tokenDto = objectMapper.readValue(content, TokenDTO.class);
 
         specification = new RequestSpecBuilder()
-                .addHeader(TestConfigs.HEADER_PARAM_AUTHORIZATION, "Bearer " + accessToken)
+                .addHeader(TestConfigs.HEADER_PARAM_ORIGIN, TestConfigs.ORIGIN_ERUDIO)
+                .addHeader(TestConfigs.HEADER_PARAM_AUTHORIZATION, "Bearer " + tokenDto.getAccessToken())
                 .setBasePath("/api/book/v1")
                 .setPort(TestConfigs.SERVER_PORT)
                 .addFilter(new RequestLoggingFilter(LogDetail.ALL))
                 .addFilter(new ResponseLoggingFilter(LogDetail.ALL))
                 .build();
+
+
+        assertNotNull(tokenDto.getAccessToken());
+        assertNotNull(tokenDto.getRefreshToken());
     }
+
 
     @Test
     @Order(1)

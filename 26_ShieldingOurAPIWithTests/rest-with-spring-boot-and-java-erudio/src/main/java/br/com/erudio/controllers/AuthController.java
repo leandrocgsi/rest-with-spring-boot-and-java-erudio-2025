@@ -23,7 +23,7 @@ public class AuthController implements AuthControllerDocs {
 
     @PostMapping("/signin")
     @Override
-    public ResponseEntity signin(@RequestBody AccountCredentialsDTO credentials) {
+    public ResponseEntity<?> signin(@RequestBody AccountCredentialsDTO credentials) {
         if (credentialsIsInvalid(credentials))return ResponseEntity.status(HttpStatus.FORBIDDEN).body("Invalid client request!");
         var token = service.signIn(credentials);
 
@@ -33,7 +33,7 @@ public class AuthController implements AuthControllerDocs {
 
     @PutMapping("/refresh/{username}")
     @Override
-    public ResponseEntity refreshToken(
+    public ResponseEntity<?> refreshToken(
             @PathVariable("username") String username,
             @RequestHeader("Authorization") String refreshToken) {
         if (parametersAreInvalid(username, refreshToken)) return ResponseEntity.status(HttpStatus.FORBIDDEN).body("Invalid client request!");

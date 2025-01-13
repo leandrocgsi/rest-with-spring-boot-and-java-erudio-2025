@@ -1,138 +1,93 @@
 package br.com.erudio.integrationtests.dto;
 
-import java.io.Serializable;
-import java.util.Date;
 import jakarta.xml.bind.annotation.XmlRootElement;
 
-//@XmlRootElement
-public class TokenDTO implements Serializable{
+import java.io.Serializable;
+import java.util.Date;
+import java.util.Objects;
 
-	private static final long serialVersionUID = 1L;
-	
-	private String username;
-	private Boolean authenticated;
-	private Date created;
-	private Date expiration;
-	private String accessToken;
-	private String refreshToken;
-	
-	public TokenDTO() {}
-	
-	public TokenDTO(
-			String username,
-			Boolean authenticated,
-			Date created,
-			Date expiration,
-			String accessToken,
-			String refreshToken) {
-		this.username = username;
-		this.authenticated = authenticated;
-		this.created = created;
-		this.expiration = expiration;
-		this.accessToken = accessToken;
-		this.refreshToken = refreshToken;
-	}
+@XmlRootElement
+public class TokenDTO implements Serializable {
 
-	public String getUsername() {
-		return username;
-	}
+    private static final long serialVersionUID = 1L;
 
-	public void setUsername(String username) {
-		this.username = username;
-	}
+    private String username;
+    private Boolean authenticated;
+    private Date created;
+    private Date expiration;
+    private String accessToken;
+    private String refreshToken;
 
-	public Boolean getAuthenticated() {
-		return authenticated;
-	}
+    public TokenDTO() {}
 
-	public void setAuthenticated(Boolean authenticated) {
-		this.authenticated = authenticated;
-	}
+    public TokenDTO(String username, Boolean authenticated,
+                    Date created, Date expiration, String accessToken,
+                    String refreshToken) {
+        this.username = username;
+        this.authenticated = authenticated;
+        this.created = created;
+        this.expiration = expiration;
+        this.accessToken = accessToken;
+        this.refreshToken = refreshToken;
+    }
 
-	public Date getCreated() {
-		return created;
-	}
+    public String getUsername() {
+        return username;
+    }
 
-	public void setCreated(Date created) {
-		this.created = created;
-	}
+    public void setUsername(String username) {
+        this.username = username;
+    }
 
-	public Date getExpiration() {
-		return expiration;
-	}
+    public Boolean getAuthenticated() {
+        return authenticated;
+    }
 
-	public void setExpiration(Date expiration) {
-		this.expiration = expiration;
-	}
+    public void setAuthenticated(Boolean authenticated) {
+        this.authenticated = authenticated;
+    }
 
-	public String getAccessToken() {
-		return accessToken;
-	}
+    public Date getCreated() {
+        return created;
+    }
 
-	public void setAccessToken(String accessToken) {
-		this.accessToken = accessToken;
-	}
+    public void setCreated(Date created) {
+        this.created = created;
+    }
 
-	public String getRefreshToken() {
-		return refreshToken;
-	}
+    public Date getExpiration() {
+        return expiration;
+    }
 
-	public void setRefreshToken(String refreshToken) {
-		this.refreshToken = refreshToken;
-	}
+    public void setExpiration(Date expiration) {
+        this.expiration = expiration;
+    }
 
-	@Override
-	public int hashCode() {
-		final int prime = 31;
-		int result = 1;
-		result = prime * result + ((accessToken == null) ? 0 : accessToken.hashCode());
-		result = prime * result + ((authenticated == null) ? 0 : authenticated.hashCode());
-		result = prime * result + ((created == null) ? 0 : created.hashCode());
-		result = prime * result + ((expiration == null) ? 0 : expiration.hashCode());
-		result = prime * result + ((refreshToken == null) ? 0 : refreshToken.hashCode());
-		result = prime * result + ((username == null) ? 0 : username.hashCode());
-		return result;
-	}
+    public String getAccessToken() {
+        return accessToken;
+    }
 
-	@Override
-	public boolean equals(Object obj) {
-		if (this == obj)
-			return true;
-		if (obj == null)
-			return false;
-		if (getClass() != obj.getClass())
-			return false;
-		TokenDTO other = (TokenDTO) obj;
-		if (accessToken == null) {
-			if (other.accessToken != null)
-				return false;
-		} else if (!accessToken.equals(other.accessToken))
-			return false;
-		if (authenticated == null) {
-			if (other.authenticated != null)
-				return false;
-		} else if (!authenticated.equals(other.authenticated))
-			return false;
-		if (created == null) {
-			if (other.created != null)
-				return false;
-		} else if (!created.equals(other.created))
-			return false;
-		if (expiration == null) {
-			if (other.expiration != null)
-				return false;
-		} else if (!expiration.equals(other.expiration))
-			return false;
-		if (refreshToken == null) {
-			if (other.refreshToken != null)
-				return false;
-		} else if (!refreshToken.equals(other.refreshToken))
-			return false;
-		if (username == null) {
-			if (other.username != null)
-				return false;
-		} else if (!username.equals(other.username))
-			return false;
-		return true;
-	}
+    public void setAccessToken(String accessToken) {
+        this.accessToken = accessToken;
+    }
+
+    public String getRefreshToken() {
+        return refreshToken;
+    }
+
+    public void setRefreshToken(String refreshToken) {
+        this.refreshToken = refreshToken;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (o == null || getClass() != o.getClass()) return false;
+        TokenDTO tokenDTO = (TokenDTO) o;
+        return Objects.equals(getUsername(), tokenDTO.getUsername()) && Objects.equals(getAuthenticated(), tokenDTO.getAuthenticated()) && Objects.equals(getCreated(), tokenDTO.getCreated()) && Objects.equals(getExpiration(), tokenDTO.getExpiration()) && Objects.equals(getAccessToken(), tokenDTO.getAccessToken()) && Objects.equals(getRefreshToken(), tokenDTO.getRefreshToken());
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(getUsername(), getAuthenticated(), getCreated(), getExpiration(), getAccessToken(), getRefreshToken());
+    }
 }
