@@ -1,22 +1,23 @@
-package br.com.erudio.utils.email;
+package br.com.erudio.config;
 
 import org.springframework.boot.context.properties.ConfigurationProperties;
-import org.springframework.stereotype.Component;
+import org.springframework.context.annotation.Configuration;
 
-@Component
+import java.util.Objects;
+
+@Configuration
 @ConfigurationProperties(prefix = "spring.mail")
-public class EmailConfigs {
+public class EmailConfig {
 
-    private String host;  // Host do servidor SMTP
-    private int port;     // Porta SMTP
-    private String username; // E-mail do remetente
-    private String password; // Senha do e-mail
-    private String from;     // Remetente
-    private boolean ssl;     // SSL habilitado ou não
+    private String host;
+    private int port;
+    private String username;
+    private String password;
+    private String from;
+    private boolean ssl;
 
-    public EmailConfigs() {}
+    public EmailConfig() {}
 
-    // Getters e Setters
     public String getHost() {
         return host;
     }
@@ -63,5 +64,17 @@ public class EmailConfigs {
 
     public void setSsl(boolean ssl) {
         this.ssl = ssl;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (o == null || getClass() != o.getClass()) return false;
+        EmailConfig that = (EmailConfig) o;
+        return getPort() == that.getPort() && isSsl() == that.isSsl() && Objects.equals(getHost(), that.getHost()) && Objects.equals(getUsername(), that.getUsername()) && Objects.equals(getPassword(), that.getPassword()) && Objects.equals(getFrom(), that.getFrom());
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(getHost(), getPort(), getUsername(), getPassword(), getFrom(), isSsl());
     }
 }

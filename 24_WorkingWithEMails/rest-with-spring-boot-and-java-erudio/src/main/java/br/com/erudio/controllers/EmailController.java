@@ -15,24 +15,21 @@ import org.springframework.web.multipart.MultipartFile;
 public class EmailController implements EmailControllerDocs {
 
     @Autowired
-    private EmailService emailService;
+    private EmailService service;
 
     @PostMapping
     @Override
     public ResponseEntity<String> sendEmail(@RequestBody EmailRequestDTO emailRequest) {
-        emailService.sendSimpleMail(emailRequest.getTo(), emailRequest.getSubject(), emailRequest.getBody());
-        return new ResponseEntity<>("E-mail enviado com sucesso!", HttpStatus.OK);
+        service.sendSimpleEmail(emailRequest);
+        return new ResponseEntity<>("e-Mail sent with success!", HttpStatus.OK);
     }
 
-    @PostMapping(value = "/with-attachment", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    @PostMapping(value = "/withAttachment", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     @Override
     public ResponseEntity<String> sendEmailWithAttachment(
-            @RequestParam("emailRequest") String emailRequestJson,
+            @RequestParam("emailRequest") String emailRequest,
             @RequestParam("attachment") MultipartFile attachment) {
-
-        // Enviar o e-mail com anexo, delegando a lógica ao serviço
-        emailService.sendEmailWithAttachment(emailRequestJson, attachment);
-
-        return new ResponseEntity<>("Email with attachment sent successfully!", HttpStatus.OK);
+        service.setEmailWithAttachment(emailRequest, attachment);
+        return new ResponseEntity<>("e-Mail with attachment sent successfully!", HttpStatus.OK);
     }
 }

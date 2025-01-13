@@ -5,8 +5,8 @@ cors:
 file:
   upload-dir: /Code/UploadDir
 email:
-  subject: "Default Subject"     # Assunto padrão do e-mail
-  message: "Default Message"     # Mensagem padrão do e-mail
+  subject: "Default Subject"
+  message: "Default Message"
 spring:
   application:
     name: rest-with-spring-boot-and-java-erudio
@@ -20,14 +20,14 @@ spring:
     show-sql: false
     open-in-view: false
   mail:
-    host: smtp.gmail.com               # Endereço do servidor SMTP do Google
-    port: 587                          # Porta para TLS
-    username: ${EMAIL_USERNAME}        # Variável de ambiente para o e-mail do Gmail
-    password: ${EMAIL_PASSWORD}        # Variável de ambiente para a senha do app
+    host: smtp.gmail.com
+    port: 587
+    username: ${EMAIL_USERNAME}
+    password: ${EMAIL_PASSWORD}
     properties:
-      mail.smtp.auth: true                 # Habilitar autenticação SMTP
-      mail.smtp.starttls.enable: true      # Habilitar STARTTLS
-      mail.smtp.starttls.required: true    # Exigir STARTTLS
+      mail.smtp.auth: true
+      mail.smtp.starttls.enabled: true
+      mail.smtp.starttls.required: true
   servlet:
     multipart:
       enabled: true

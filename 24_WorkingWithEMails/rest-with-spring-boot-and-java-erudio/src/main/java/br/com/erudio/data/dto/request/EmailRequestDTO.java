@@ -8,7 +8,7 @@ public class EmailRequestDTO {
     private String subject;
     private String body;
 
-    public EmailRequestDTO() { }
+    public EmailRequestDTO() {}
 
     public String getTo() {
         return to;
